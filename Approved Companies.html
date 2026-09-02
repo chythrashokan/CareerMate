@@ -1,0 +1,627 @@
+{% extends "admin/index.html" %}
+{% block body %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Approved Companies - Admin Panel</title>
+<style>
+    :root {
+        --primary-green: #2ae149;
+        --primary-dark: #1db334;
+        --success-bg: #e8f5e9;
+        --dark-bg: #121212;
+        --card-bg: #ffffff;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --border-color: #e0e0e0;
+        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+        --border-radius: 12px;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        margin: 0;
+        padding: 20px;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .header-section {
+        background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+        padding: 35px 40px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-medium);
+        margin-bottom: 30px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .header-title h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-title p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+        font-size: 16px;
+    }
+
+    .stats-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 18px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .companies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .company-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-light);
+        overflow: hidden;
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+    }
+
+    .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-medium);
+        border-color: var(--primary-green);
+    }
+
+    .card-header {
+        background: var(--success-bg);
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .company-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .company-name i {
+        color: var(--primary-green);
+    }
+
+    .company-id {
+        color: var(--text-secondary);
+        font-size: 14px;
+        background: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .info-row {
+        display: flex;
+        margin-bottom: 20px;
+        gap: 15px;
+    }
+
+    .info-item {
+        flex: 1;
+    }
+
+    .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-value {
+        font-size: 15px;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .contact-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .description-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+    }
+
+    .company-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 15px 0;
+        border: 2px solid var(--border-color);
+        transition: var(--transition);
+    }
+
+    .company-image:hover {
+        transform: scale(1.02);
+        border-color: var(--primary-green);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-track {
+        background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-track:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(42, 225, 73, 0.3);
+    }
+
+    .btn-view {
+        background: #f8f9fa;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .btn-view:hover {
+        background: #e9ecef;
+        border-color: var(--text-secondary);
+    }
+
+    .no-data-message {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+    }
+
+    .no-data-message i {
+        font-size: 48px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .no-data-message h3 {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    /* Filter and Search Section */
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-light);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 45px 12px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 15px;
+        transition: var(--transition);
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary-green);
+        box-shadow: 0 0 0 3px rgba(42, 225, 73, 0.1);
+    }
+
+    .search-box i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .companies-grid {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .companies-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-section {
+            flex-direction: column;
+        }
+
+        .search-box {
+            min-width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-section {
+            padding: 25px 20px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .company-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    /* Stagger animation for cards */
+    .company-card:nth-child(1) { animation-delay: 0.1s; }
+    .company-card:nth-child(2) { animation-delay: 0.2s; }
+    .company-card:nth-child(3) { animation-delay: 0.3s; }
+    .company-card:nth-child(4) { animation-delay: 0.4s; }
+    .company-card:nth-child(5) { animation-delay: 0.5s; }
+    .company-card:nth-child(6) { animation-delay: 0.6s; }
+    .company-card:nth-child(7) { animation-delay: 0.7s; }
+    .company-card:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Status badge */
+    .status-badge {
+        background: var(--primary-green);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="header-section">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-building-check"></i>
+                        Approved Companies
+                    </h1>
+                    <p>All companies that have been approved to post jobs on the platform</p>
+                </div>
+                <div class="stats-badge">
+                    <i class="fas fa-check-circle"></i>
+                    {{ data|length }} Approved
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search companies by name, location, or contact...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-view" onclick="resetFilters()">
+                    <i class="fas fa-sync-alt"></i>
+                    Reset Filters
+                </button>
+            </div>
+        </div>
+
+        {% if data %}
+        <div class="companies-grid" id="companiesGrid">
+            {% for i in data %}
+            <div class="company-card" data-company="{{ i.company_name|lower }}"
+                 data-location="{{ i.place|lower }} {{ i.post|lower }}"
+                 data-contact="{{ i.email|lower }} {{ i.phone|lower }}">
+                <div class="card-header">
+                    <h3 class="company-name">
+                        <i class="fas fa-building"></i>
+                        {{ i.company_name }}
+                    </h3>
+                    <span class="company-id">#{{ forloop.counter }}</span>
+                </div>
+
+                <div class="card-body">
+                    <!-- Status Badge -->
+                    <div style="margin-bottom: 15px;">
+                        <span class="status-badge">
+                            <i class="fas fa-check"></i>
+                            Approved
+                        </span>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Location
+                            </div>
+                            <div class="info-value">{{ i.place }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </div>
+                            <div class="info-value">{{ i.email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-phone"></i>
+                                Phone
+                            </div>
+                            <div class="info-value">{{ i.phone }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-map-pin"></i>
+                                Postal Code
+                            </div>
+                            <div class="info-value">{{ i.pin }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="contact-info">
+                        <div class="info-label">
+                            <i class="fas fa-location-dot"></i>
+                            Complete Address
+                        </div>
+                        <div class="info-value">
+                            {{ i.place }}, {{ i.post }}<br>
+                            PIN: {{ i.pin }}
+                        </div>
+                    </div>
+
+                    <!-- Company Description -->
+                    {% if i.description %}
+                    <div class="description-box">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i>
+                            Description
+                        </div>
+                        <div class="info-value">{{ i.description|truncatechars:150 }}</div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Company Image -->
+                    {% if i.image %}
+                    <img src="{{ i.image }}" alt="{{ i.company_name }}" class="company-image">
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="https://www.google.com/maps?q={{ i.latitude }},{{ i.longitude }}"
+                           class="btn-track"
+                           target="_blank">
+                            <i class="fas fa-map-marker-alt"></i>
+                            View on Map
+                        </a>
+                        <a class="btn-track" href="/delete_company/{{ i.id }}" onclick="return confirm('Are you sure?')">
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-data-message">
+            <i class="fas fa-building-circle-exclamation"></i>
+            <h3>No approved companies found</h3>
+            <p>All registered companies are pending approval or have been rejected.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.company-card');
+
+            cards.forEach(card => {
+                const companyName = card.dataset.company;
+                const location = card.dataset.location;
+                const contact = card.dataset.contact;
+
+                if (companyName.includes(searchTerm) ||
+                    location.includes(searchTerm) ||
+                    contact.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.3s ease-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            const cards = document.querySelectorAll('.company-card');
+            cards.forEach(card => {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.3s ease-out';
+            });
+        }
+
+        // Show company details (can be extended)
+        function showCompanyDetails(index) {
+            const cards = document.querySelectorAll('.company-card');
+            const card = cards[index - 1];
+
+            // Add visual feedback
+            card.style.boxShadow = '0 0 0 3px rgba(42, 225, 73, 0.3)';
+            setTimeout(() => {
+                card.style.boxShadow = '';
+            }, 1000);
+
+            // Here you can implement modal or detailed view
+            alert('Company details view would open here.\nCompany #' + index);
+        }
+
+        // Add hover effect to cards
+        document.querySelectorAll('.company-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.zIndex = '10';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.zIndex = '1';
+            });
+        });
+
+        // Count animation for stats
+        const statBadge = document.querySelector('.stats-badge');
+        const count = {{ data|length }};
+        if (statBadge) {
+            let current = 0;
+            const increment = count / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= count) {
+                    current = count;
+                    clearInterval(timer);
+                }
+                statBadge.innerHTML = `<i class="fas fa-check-circle"></i> ${Math.floor(current)} Approved`;
+            }, 20);
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

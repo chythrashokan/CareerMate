@@ -1,0 +1,118 @@
+{% extends "company/index.html" %}
+{% block body %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>View Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+{#    .container {#}
+{#      max-width: 1000px;#}
+{#      margin: 30px auto;#}
+{#      padding: 20px;#}
+{#      background-color: #fff;#}
+{#      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);#}
+{#      border-radius: 8px;#}
+{#    }#}
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 50%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 15px;
+      background-color: #2ae149;
+      color: white;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px 15px;
+      border-top: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    td img {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+    }
+
+    .btn {
+      background-color: black;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background-color: #333;
+    }
+
+    .table-container {
+      padding: 20px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .align-center {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+ <div class="container table-container">
+    <h1>Company Profile</h1>
+    <table>
+      <tr>
+        <th scope="row">Company Image</th>
+        <td><img src="{{ data.image }}" alt="Company Image"></td>
+      </tr>
+      <tr>
+        <th scope="row">Name</th>
+        <td>{{ data.company_name }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Address</th>
+        <td>{{ data.place }}<br>{{ data.post }}<br>{{ data.pin }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Phone</th>
+        <td>{{ data.phone }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Email</th>
+        <td>{{ data.email }}</td>
+      </tr>
+      <tr>
+        <td colspan="2" class="align-center">
+          <a href="https://www.google.com/maps?q={{ data.latitude }},{{ data.longitude }}" class="btn">Track</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMate - Company Registration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2a6ee1;
+            --primary-dark: #1a5bc7;
+            --secondary: #ff6b35;
+            --accent: #00c9b7;
+            --dark: #2d3748;
+            --light: #f8fafc;
+            --gray: #718096;
+            --success: #2ae149;
+            --success-dark: #1bbd36;
+            --error: #e53e3e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2a6ee1, #00c9b7);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .left-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -80px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 32px;
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .logo-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .left-panel h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .left-panel p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .features {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .features li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .features i {
+            color: var(--accent);
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .right-panel {
+            flex: 1.2;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .right-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .right-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .right-panel::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h2 {
+            font-size: 32px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: var(--gray);
+        }
+
+        .company-icon {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .company-icon span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            color: white;
+            font-size: 30px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .required::after {
+            content: '*';
+            color: var(--error);
+            margin-left: 4px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(42, 110, 225, 0.2);
+            outline: none;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            background: var(--light);
+            border: 2px dashed #e2e8f0;
+            border-radius: 10px;
+            color: var(--gray);
+            font-size: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-input-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .file-input-button i {
+            margin-right: 8px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+        }
+
+        .map-container {
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #gmap {
+            width: 100%;
+            height: 200px;
+        }
+
+        .location-instruction {
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .coordinates {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(42, 225, 73, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .btn-register i {
+            margin-right: 8px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(42, 225, 73, 0.4);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--gray);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: var(--gray);
+            text-align: center;
+        }
+
+        .progress-step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        .progress-step.completed .step-number {
+            background: var(--success);
+            color: white;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-nav {
+            padding: 12px 25px;
+            background: var(--light);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-nav:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-nav i {
+            margin-right: 8px;
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel, .right-panel {
+                padding: 40px 30px;
+            }
+
+            .right-panel {
+                max-height: none;
+                overflow-y: visible;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .left-panel, .right-panel {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .coordinates {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo">
+                <i class="fas fa-briefcase logo-icon"></i>
+                <div class="logo-text">CareerMate</div>
+            </div>
+            <h1>Register Your Company on CareerMate</h1>
+            <p>Join our platform to connect with top talent and grow your business with the right professionals.</p>
+            <ul class="features">
+                <li><i class="fas fa-check-circle"></i> Access to qualified candidates</li>
+                <li><i class="fas fa-check-circle"></i> Post job opportunities</li>
+                <li><i class="fas fa-check-circle"></i> Company profile visibility</li>
+                <li><i class="fas fa-check-circle"></i> Connect with skilled professionals</li>
+            </ul>
+        </div>
+
+        <div class="right-panel">
+            <div class="register-header">
+                <h2>Company Registration</h2>
+                <p>Create your company account in a few simple steps</p>
+            </div>
+
+            <div class="company-icon">
+                <span class="fas fa-building"></span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Basic Info</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Security</div>
+                </div>
+            </div>
+
+            <form action="/register_company_post" class="registration-form" method="post" enctype="multipart/form-data">
+                <!-- Step 1: Basic Information -->
+                <div class="form-section active" id="section1">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name" class="required">Company Name</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-building input-icon"></i>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Enter company name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="required">Email Address</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter company email" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" class="required">Phone Number</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-phone input-icon"></i>
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="10-digit phone number" pattern="^[0-9]{10}$" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="img" class="required">Company Proof</label>
+                            <div class="file-input-wrapper">
+                                <div class="file-input-button">
+                                    <i class="fas fa-upload"></i>
+                                    <span>Choose Company Proof</span>
+                                </div>
+                                <input type="file" class="form-control" id="img" name="img" accept="image/*" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="des" class="required">Company Description</label>
+                        <textarea class="form-control" id="des" name="des" placeholder="Brief description of your company" rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-navigation">
+                        <div></div> <!-- Empty div for alignment -->
+                        <button type="button" class="btn-nav btn-next" onclick="showSection(2)">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Location Information -->
+                <div class="form-section" id="section2">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="place" class="required">City/Town</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-marker-alt input-icon"></i>
+                                <input type="text" class="form-control" id="place" name="place" placeholder="Enter your city/town" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="post" class="required">Post Office</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-mail-bulk input-icon"></i>
+                                <input type="text" class="form-control" id="post" name="post" placeholder="Enter post office" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pin" class="required">PIN Code</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-map-pin input-icon"></i>
+                                <input type="text" class="form-control" id="pin" name="pin" placeholder="6-digit PIN code" pattern="^\d{6}$" title="Pincode must be 6 digits" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gmap" class="required">Company Location</label>
+                        <p class="location-instruction">Click on the map to set your company location or use your current location</p>
+                        <div class="map-container">
+                            <div id="gmap"></div>
+                                                        <input type="hidden" class="form-control" id="lt" name="lati" placeholder="Latitude" readonly required>
+                                                        <input type="hidden" class="form-control" id="lg" name="longi" placeholder="Longitude" readonly required>
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn-nav" onclick="showSection(1)"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="button" class="btn-nav btn-next" onclick="showSection(3)">Next <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Security Information -->
+                <div class="form-section" id="section3">
+                    <div class="form-group">
+                        <label for="password" class="required">Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" class="form-control" id="password" name="pass" placeholder="Create a strong password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                            <button type="button" class="password-toggle" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-requirements">
+                            <small>Password must contain at least 8 characters, including uppercase, lowercase letters and numbers</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cpassword" class="required">Confirm Password</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-lock input-icon"></i>
+                            <input type="password" class="form-control" id="cpassword" name="cpass" placeholder="Confirm your password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+                            <button type="button" class="password-toggle" id="toggleCPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div id="password-match" style="display:none; color:var(--error); font-size:14px; margin-top:5px;">
+                            Passwords do not match
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn-nav" onclick="showSection(2)"><i class="fas fa-arrow-left"></i> Previous</button>
+                        <button type="submit" class="btn-register"><i class="fas fa-user-plus"></i> REGISTER COMPANY</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="login-link">
+                Already have an account? <a href="/">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6v5-2uaq_wusHDktM9ILcqIrlPtnZgEk&sensor=false"></script>
+    <script>
+        // Multi-step form functionality
+        function showSection(sectionNumber) {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show the selected section
+            document.getElementById('section' + sectionNumber).classList.add('active');
+
+            // Update progress steps
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                if (index + 1 < sectionNumber) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === sectionNumber) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        document.getElementById('toggleCPassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('cpassword');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Password confirmation validation
+        document.getElementById('cpassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const matchMessage = document.getElementById('password-match');
+
+            if (confirmPassword && password !== confirmPassword) {
+                matchMessage.style.display = 'block';
+                this.style.borderColor = 'var(--error)';
+            } else {
+                matchMessage.style.display = 'none';
+                this.style.borderColor = '#e2e8f0';
+            }
+        });
+
+        // File input display
+        document.getElementById('img').addEventListener('change', function() {
+            const fileName = this.files[0] ? this.files[0].name : 'Choose Company Logo';
+            this.previousElementSibling.querySelector('span').textContent = fileName;
+        });
+
+        // Form validation feedback
+        const form = document.querySelector('.registration-form');
+        const inputs = form.querySelectorAll('input[required]');
+
+        inputs.forEach(input => {
+            input.addEventListener('invalid', function() {
+                this.style.borderColor = 'var(--error)';
+            });
+
+            input.addEventListener('input', function() {
+                if (this.checkValidity()) {
+                    this.style.borderColor = '#2ae149';
+                }
+            });
+        });
+
+        // Google Maps functionality
+        var map, marker;
+        initialize();
+
+        function initialize() {
+            var myLatlng = new google.maps.LatLng(11.868536, 75.363197);
+            var myOptions = {
+                zoom: 7,
+                center: myLatlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+            map = new google.maps.Map(document.getElementById("gmap"), myOptions);
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+                draggable: true
+            });
+
+            google.maps.event.addListener(map, "click", function(event) {
+                var clickLat = event.latLng.lat();
+                var clickLon = event.latLng.lng();
+                document.getElementById("lt").value = clickLat.toFixed(5);
+                document.getElementById("lg").value = clickLon.toFixed(5);
+                marker.setPosition(new google.maps.LatLng(clickLat, clickLon));
+            });
+
+            google.maps.event.addListener(marker, "dragend", function(event) {
+                var dragLat = event.latLng.lat();
+                var dragLon = event.latLng.lng();
+                document.getElementById("lt").value = dragLat.toFixed(5);
+                document.getElementById("lg").value = dragLon.toFixed(5);
+            });
+
+            GetMylocation();
+        }
+
+        function GetMylocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            document.getElementById("lt").value = lat;
+            document.getElementById("lg").value = lon;
+
+            var myLatlng = new google.maps.LatLng(lat, lon);
+            map.setCenter(myLatlng);
+            map.setZoom(14);
+            marker.setPosition(myLatlng);
+        }
+    </script>
+</body>
+</html>

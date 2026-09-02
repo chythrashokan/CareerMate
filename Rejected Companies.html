@@ -1,0 +1,806 @@
+{% extends "admin/index.html" %}
+{% block body %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Rejected Companies - Admin Panel</title>
+<style>
+    :root {
+        --primary-red: #ff4444;
+        --red-dark: #cc0000;
+        --red-light: #ffebee;
+        --warning-bg: #fff3e0;
+        --dark-bg: #121212;
+        --card-bg: #ffffff;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --border-color: #e0e0e0;
+        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+        --border-radius: 12px;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        margin: 0;
+        padding: 20px;
+        color: var(--text-primary);
+        line-height: 1.6;
+    }
+
+    .dashboard-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .header-section {
+        background: linear-gradient(135deg, var(--primary-red), var(--red-dark));
+        padding: 35px 40px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-medium);
+        margin-bottom: 30px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .header-title h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-title p {
+        margin: 10px 0 0;
+        opacity: 0.9;
+        font-size: 16px;
+    }
+
+    .stats-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 12px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 18px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .companies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .company-card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-light);
+        overflow: hidden;
+        transition: var(--transition);
+        border: 1px solid var(--border-color);
+        position: relative;
+    }
+
+    .company-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-medium);
+        border-color: var(--primary-red);
+    }
+
+    .company-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-red), #ff8888);
+    }
+
+    .card-header {
+        background: var(--red-light);
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .company-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .company-name i {
+        color: var(--primary-red);
+    }
+
+    .company-id {
+        color: var(--text-secondary);
+        font-size: 14px;
+        background: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+    }
+
+    .card-body {
+        padding: 25px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-value {
+        font-size: 15px;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    .contact-section {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .description-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-size: 14px;
+        line-height: 1.5;
+        color: var(--text-secondary);
+        max-height: 100px;
+        overflow-y: auto;
+    }
+
+    .description-box::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .description-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .description-box::-webkit-scrollbar-thumb {
+        background: var(--primary-red);
+        border-radius: 3px;
+    }
+
+    .company-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 15px 0;
+        border: 2px solid var(--border-color);
+        transition: var(--transition);
+    }
+
+    .company-image:hover {
+        transform: scale(1.02);
+        border-color: var(--primary-red);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-track {
+        background: linear-gradient(135deg, var(--primary-red), var(--red-dark));
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-track:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+    }
+
+    .btn-review {
+        background: var(--warning-bg);
+        color: #e65100;
+        border: 1px solid #ffb74d;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .btn-review:hover {
+        background: #ffe0b2;
+        border-color: #ff9800;
+    }
+
+    .btn-restore {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #81c784;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .btn-restore:hover {
+        background: #c8e6c9;
+        border-color: #4caf50;
+    }
+
+    .no-data-message {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-secondary);
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-light);
+    }
+
+    .no-data-message i {
+        font-size: 48px;
+        color: #ffcdd2;
+        margin-bottom: 20px;
+    }
+
+    .no-data-message h3 {
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    /* Filter and Search Section */
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-light);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .search-box {
+        flex: 1;
+        min-width: 300px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 45px 12px 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 15px;
+        transition: var(--transition);
+    }
+
+    .search-box input:focus {
+        outline: none;
+        border-color: var(--primary-red);
+        box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+    }
+
+    .search-box i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+    }
+
+    /* Status badge */
+    .status-badge {
+        background: var(--primary-red);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 15px;
+    }
+
+    /* Rejection details */
+    .rejection-details {
+        background: #fff3f3;
+        border: 1px solid #ffcdd2;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+        display: none;
+    }
+
+    .rejection-details.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .companies-grid {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .companies-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-section {
+            flex-direction: column;
+        }
+
+        .search-box {
+            min-width: 100%;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-section {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-section {
+            padding: 25px 20px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .company-card {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+    }
+
+    /* Stagger animation for cards */
+    .company-card:nth-child(1) { animation-delay: 0.1s; }
+    .company-card:nth-child(2) { animation-delay: 0.2s; }
+    .company-card:nth-child(3) { animation-delay: 0.3s; }
+    .company-card:nth-child(4) { animation-delay: 0.4s; }
+    .company-card:nth-child(5) { animation-delay: 0.5s; }
+    .company-card:nth-child(6) { animation-delay: 0.6s; }
+    .company-card:nth-child(7) { animation-delay: 0.7s; }
+    .company-card:nth-child(8) { animation-delay: 0.8s; }
+
+    /* Export buttons */
+    .export-buttons {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+    }
+
+    .btn-export {
+        background: white;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .btn-export:hover {
+        background: #f5f5f5;
+        border-color: var(--primary-red);
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="header-section">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-building-xmark"></i>
+                        Rejected Companies
+                    </h1>
+                    <p>Review companies that were rejected during the approval process</p>
+                </div>
+                <div class="stats-badge">
+                    <i class="fas fa-ban"></i>
+                    {{ data|length }} Rejected
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter and Search Section -->
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search rejected companies...">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <button class="btn-export" onclick="resetFilters()">
+                <i class="fas fa-sync-alt"></i>
+                Reset Filters
+            </button>
+        </div>
+
+        {% if data %}
+        <div class="companies-grid" id="companiesGrid">
+            {% for i in data %}
+            <div class="company-card" data-company="{{ i.company_name|lower }}"
+                 data-location="{{ i.place|lower }} {{ i.post|lower }}"
+                 data-email="{{ i.email|lower }}"
+                 data-phone="{{ i.phone }}">
+                <div class="card-header">
+                    <h3 class="company-name">
+                        <i class="fas fa-building"></i>
+                        {{ i.company_name }}
+                    </h3>
+                    <span class="company-id">#{{ forloop.counter }}</span>
+                </div>
+
+                <div class="card-body">
+                    <!-- Status Badge -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <span class="status-badge">
+                            <i class="fas fa-times-circle"></i>
+                            Rejected
+                        </span>
+                        <button class="btn-review" onclick="showRejectionDetails(this)">
+                            <i class="fas fa-info-circle"></i>
+                            Details
+                        </button>
+                    </div>
+
+                    <!-- Rejection Details (hidden by default) -->
+                    <div class="rejection-details">
+                        <div class="info-label">
+                            <i class="fas fa-comment"></i>
+                            Rejection Reason
+                        </div>
+                        <div class="info-value">Company did not meet verification requirements.</div>
+                        <div class="info-label" style="margin-top: 10px;">
+                            <i class="fas fa-calendar-times"></i>
+                            Rejected On
+                        </div>
+                        <div class="info-value">{% now "F j, Y" %}</div>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Location
+                            </div>
+                            <div class="info-value">{{ i.place }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-map-pin"></i>
+                                Postal Code
+                            </div>
+                            <div class="info-value">{{ i.pin }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-location-dot"></i>
+                                Post Office
+                            </div>
+                            <div class="info-value">{{ i.post }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Information -->
+                    <div class="contact-section">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </div>
+                            <div class="info-value">{{ i.email }}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-phone"></i>
+                                Phone
+                            </div>
+                            <div class="info-value">{{ i.phone }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Company Description -->
+                    {% if i.description %}
+                    <div class="description-box">
+                        <div class="info-label">
+                            <i class="fas fa-file-alt"></i>
+                            Company Description
+                        </div>
+                        <div class="info-value">{{ i.description }}</div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Company Image -->
+                    {% if i.image %}
+                    <img src="{{ i.image }}" alt="{{ i.company_name }}" class="company-image">
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="https://www.google.com/maps?q={{ i.latitude }},{{ i.longitude }}"
+                           class="btn-track"
+                           target="_blank">
+                            <i class="fas fa-map-marker-alt"></i>
+                            View Location
+                        </a>
+                        <button class="btn-restore" onclick="restoreCompany('{{ i.company_name }}')">
+                            <i class="fas fa-undo"></i>
+                            Restore
+                        </button>
+                        <button class="btn-review"
+                                onclick="permanentDelete('{% url "delete_company" i.id %}')">
+                            <i class="fas fa-trash-alt"></i>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-data-message">
+            <i class="fas fa-building-circle-check"></i>
+            <h3>No Rejected Companies</h3>
+            <p>All registered companies are either approved or pending approval.</p>
+            <p style="font-size: 14px; color: #888; margin-top: 15px;">
+                <i class="fas fa-info-circle"></i>
+                This is a positive indicator for your platform's approval process.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.company-card');
+
+            cards.forEach(card => {
+                const companyName = card.dataset.company;
+                const location = card.dataset.location;
+                const email = card.dataset.email;
+                const phone = card.dataset.phone;
+
+                if (companyName.includes(searchTerm) ||
+                    location.includes(searchTerm) ||
+                    email.includes(searchTerm) ||
+                    phone.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.3s ease-out';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            const cards = document.querySelectorAll('.company-card');
+            cards.forEach(card => {
+                card.style.display = 'block';
+                card.style.animation = 'fadeInUp 0.3s ease-out';
+            });
+        }
+
+        // Show rejection details
+        function showRejectionDetails(button) {
+            const details = button.closest('.card-body').querySelector('.rejection-details');
+            details.classList.toggle('show');
+
+            // Toggle button text
+            if (details.classList.contains('show')) {
+                button.innerHTML = '<i class="fas fa-times-circle"></i> Hide Details';
+            } else {
+                button.innerHTML = '<i class="fas fa-info-circle"></i> Details';
+            }
+        }
+
+        // Restore company (placeholder function)
+        function restoreCompany(companyName) {
+            if (confirm(`Are you sure you want to restore "${companyName}"?\nThis will move the company back to pending approval.`)) {
+                // Add loading state
+                const button = event.target.closest('.btn-restore');
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restoring...';
+                button.disabled = true;
+
+                // Simulate API call
+                setTimeout(() => {
+                    alert(`Company "${companyName}" has been restored to pending approval.`);
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    // In real implementation, this would redirect or refresh the page
+                }, 1000);
+            }
+        }
+
+        // Permanent delete (placeholder function)
+      function permanentDelete(url) {
+    if (confirm("WARNING: Are you sure you want to permanently delete this company?\nThis action cannot be undone.")) {
+        window.location.href = url;   // 🔥 This actually calls Django view
+    }
+}
+        // Export to CSV
+        function exportToCSV() {
+            alert('Export functionality would generate a CSV file of rejected companies.');
+            // Implementation would generate CSV from data
+        }
+
+        // Print report
+        function printReport() {
+            window.print();
+        }
+
+        // Count animation for stats
+        const statBadge = document.querySelector('.stats-badge');
+        const count = {{ data|length }};
+        if (statBadge && count > 0) {
+            let current = 0;
+            const increment = count / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= count) {
+                    current = count;
+                    clearInterval(timer);
+                }
+                statBadge.innerHTML = `<i class="fas fa-ban"></i> ${Math.floor(current)} Rejected`;
+            }, 20);
+        }
+
+        // Add visual feedback for card clicks
+        document.querySelectorAll('.company-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('button') && !e.target.closest('a')) {
+                    this.style.boxShadow = '0 0 0 3px rgba(255, 68, 68, 0.2)';
+                    setTimeout(() => {
+                        this.style.boxShadow = '';
+                    }, 300);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

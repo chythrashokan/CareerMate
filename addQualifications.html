@@ -1,0 +1,407 @@
+{% extends "admin/index.html" %}
+{% block body %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Add Qualification - Admin Panel</title>
+
+    <style>
+        :root {
+            --primary-green: #2ae149;
+            --primary-dark: #1db334;
+            --dark-bg: #000000;
+            --dark-hover: #333333;
+            --light-gray: #f9f9f9;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333333;
+            --white: #ffffff;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --border-radius: 10px;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+        }
+
+
+
+        .form-wrapper {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            margin-top: 30px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary-green), var(--primary-dark));
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-header h1 {
+            margin: 0;
+            color: var(--white);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-header p {
+            margin: 10px 0 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .form-body {
+            padding: 40px;
+        }
+
+        .form-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            border-bottom: 1px solid var(--medium-gray);
+            transition: var(--transition);
+        }
+
+        .form-row:hover {
+            background-color: rgba(42, 225, 73, 0.02);
+        }
+
+        .form-row:last-child {
+            border-bottom: none;
+        }
+
+        .form-label {
+            padding: 20px 15px 20px 0;
+            width: 35%;
+            vertical-align: middle;
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-label::after {
+            content: ":";
+            color: var(--primary-green);
+            margin-left: 5px;
+        }
+
+        .form-input-cell {
+            padding: 20px 0;
+            width: 65%;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            font-family: inherit;
+            box-sizing: border-box;
+            background-color: #fafafa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            background-color: var(--white);
+            box-shadow: 0 0 0 4px rgba(42, 225, 73, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+            font-weight: 400;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .submit-btn {
+            background: var(--dark-bg);
+            color: var(--white);
+            border: none;
+            padding: 16px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background: var(--dark-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn i {
+            font-size: 18px;
+        }
+
+        .helper-text {
+            display: block;
+            margin-top: 8px;
+            color: #666;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .required-star {
+            color: #ff4444;
+            margin-left: 3px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(42, 225, 73, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(42, 225, 73, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(42, 225, 73, 0);
+            }
+        }
+
+        /* Success state animation */
+        .form-input.success {
+            border-color: var(--primary-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .form-body {
+                padding: 25px;
+            }
+
+            .form-label {
+                width: 100%;
+                display: block;
+                padding: 10px 0;
+            }
+
+            .form-input-cell {
+                width: 100%;
+                display: block;
+                padding: 10px 0 20px;
+            }
+
+            .form-header h1 {
+                font-size: 24px;
+            }
+
+            .form-header p {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-header {
+                padding: 25px 20px;
+            }
+
+            .form-body {
+                padding: 20px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h1>Add New Qualification/Skill</h1>
+                <p>Add educational qualifications or skill to the system database</p>
+            </div>
+
+            <div class="form-body">
+                <form action="/addqualification_post" method="post" id="qualificationForm">
+                    <table class="form-table">
+                        <tr class="form-row">
+                            <th class="form-label" scope="row">
+                                Qualification / Skill
+                                <span class="required-star">*</span>
+                            </th>
+                            <td class="form-input-cell">
+                                <input
+                                    type="text"
+                                    name="q"
+                                    id="qualificationInput"
+                                    class="form-input"
+                                    placeholder="e.g., Bachelor of Science in Computer Science, MBA, PhD"
+                                    required
+                                    maxlength="200"
+                                    autocomplete="off"
+                                />
+                                <span class="helper-text">
+                                    Enter the full name of the qualification
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="form-row">
+                            <th class="form-label" scope="row">
+Type                                <span class="required-star">*</span>
+                            </th>
+                            <td class="form-input-cell">
+                                <select
+                                    type="text"
+                                    name="t"
+                                    id="t"
+                                    class="form-input">
+                                    <option>Qualification</option>
+                                    <option>Skill</option>
+                                </select>
+                                <span class="helper-text">
+                                    Enter the full name of the qualification
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="form-row">
+                            <td colspan="2" class="submit-section">
+                                <button type="submit" class="submit-btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Add Qualification
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('qualificationForm');
+            const input = document.getElementById('qualificationInput');
+
+            // Add focus styling
+            input.addEventListener('focus', function() {
+                this.parentElement.parentElement.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.parentElement.classList.remove('focused');
+            });
+
+            // Form validation
+            form.addEventListener('submit', function(e) {
+                const qualification = input.value.trim();
+
+                if (qualification === '') {
+                    e.preventDefault();
+                    input.style.borderColor = '#ff4444';
+                    input.style.boxShadow = '0 0 0 4px rgba(255, 68, 68, 0.15)';
+                    input.focus();
+
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        input.style.borderColor = '';
+                        input.style.boxShadow = '';
+                    }, 2000);
+
+                    return false;
+                }
+
+                // Success visual feedback
+                input.classList.add('success');
+
+                // Optional: Show loading state on button
+                const submitBtn = form.querySelector('.submit-btn');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+                submitBtn.disabled = true;
+
+                return true;
+            });
+
+            // Clear success animation on input
+            input.addEventListener('input', function() {
+                this.classList.remove('success');
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,962 @@
+{% extends "candidate/index.html" %}
+
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Opportunities | Find Your Dream Job</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <style>
+        /* Your existing styles here - unchanged */
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: rgba(16, 185, 129, 0.1);
+            --secondary: #3b82f6;
+            --accent: #8b5cf6;
+            --dark: #111827;
+            --light: #ffffff;
+            --gray-light: #f9fafb;
+            --gray: #6b7280;
+            --gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            --gradient-light: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+            --shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+            --glow: 0 0 20px rgba(16, 185, 129, 0.2);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #ffffff;
+            color: #374151;
+            background-image: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
+            overflow-x: hidden;
+        }
+
+        .container1 {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            background: var(--gradient-light);
+            border-radius: var(--radius);
+            margin-top: 20px;
+        }
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        .page-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 3px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Filter */
+        .filter-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            margin-bottom: 40px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .search-box {
+            flex-grow: 1;
+            max-width: 420px;
+            position: relative;
+        }
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 48px;
+            border: 1px solid #d1d5db;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.2s;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+        }
+
+        /* Job Grid */
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        /* Job Card */
+        .job-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+            transition: all 0.35s cubic-bezier(0.2, 0, 0, 1);
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .job-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 30px 40px -20px rgba(16, 185, 129, 0.25);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            z-index: 2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-header {
+            padding: 24px 24px 16px;
+            background: var(--gradient-light);
+        }
+        .college-logo {
+            width: 56px;
+            height: 56px;
+            background: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 18px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            border: 1px solid rgba(16,185,129,0.2);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.02);
+        }
+        .college-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #0f172a;
+        }
+        .college-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+        .info-item i {
+            color: var(--primary);
+            width: 18px;
+        }
+
+        .card-body {
+            padding: 20px 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .job-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #0f172a;
+        }
+        .job-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 20px;
+        }
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .meta-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+        .meta-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .salary {
+            color: var(--primary-dark);
+            font-weight: 800;
+        }
+        .skills-container {
+            margin: 12px 0 16px;
+        }
+        .skills-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .skill-tag {
+            background: rgba(16,185,129,0.1);
+            color: var(--primary-dark);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        /* CARD FOOTER - FIXED VISIBILITY */
+        .card-footer {
+            padding: 16px 24px 24px;
+            border-top: 1px solid #edf2f7;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: white;
+            margin-top: auto;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 12px 12px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            background: transparent;
+        }
+        .btn-locate {
+            background: rgba(59,130,246,0.1);
+            color: #2563eb;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+        .btn-locate:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-requirements {
+            background: rgba(139,92,246,0.1);
+            color: #7c3aed;
+            border: 1px solid rgba(139,92,246,0.3);
+        }
+        .btn-requirements:hover {
+            background: #8b5cf6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        .btn-apply {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05));
+            color: #10b981;
+            border: 1px solid rgba(16,185,129,0.5);
+            font-weight: 800;
+        }
+        .btn-apply:hover {
+            background: var(--gradient);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 18px rgba(16,185,129,0.3);
+            border-color: transparent;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 580px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            animation: modalUp 0.3s ease;
+        }
+        @keyframes modalUp {
+            from { opacity: 0; transform: scale(0.96) translateY(10px);}
+            to { opacity: 1; transform: scale(1) translateY(0);}
+        }
+        .modal-header {
+            padding: 22px 28px;
+            background: var(--gradient-light);
+            border-bottom: 1px solid #eef2ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        .close-modal {
+            background: #f1f5f9;
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 40px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .close-modal:hover {
+            background: #e2e8f0;
+            transform: rotate(90deg);
+        }
+        .modal-body {
+            padding: 28px;
+        }
+        .requirement-section {
+            margin-bottom: 28px;
+        }
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+        }
+        .qualification-list {
+            list-style: none;
+        }
+        .qualification-item {
+            padding: 10px 0 10px 28px;
+            position: relative;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+        .qualification-item::before {
+            content: "✓";
+            position: absolute;
+            left: 4px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        .qualification-skill {
+            font-weight: 500;
+        }
+        .no-requirements {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 24px;
+            background: white;
+            border-radius: 40px;
+        }
+        .empty-state-icon {
+            font-size: 70px;
+            color: rgba(16,185,129,0.3);
+            margin-bottom: 20px;
+        }
+        .refresh-btn {
+            background: var(--gradient);
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .page-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 24px;
+            border-top: 1px solid #eef2ff;
+            color: #6c757d;
+        }
+        @media (max-width: 700px) {
+            .job-grid { grid-template-columns: 1fr; }
+            .card-footer { flex-direction: row; flex-wrap: wrap; }
+            .action-btn { flex: 1 0 auto; }
+            .container1 { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Floating Elements -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+
+    <div class="container1">
+        <!-- Header Section -->
+        <header class="page-header">
+            <h1>Find Your Dream Job</h1>
+            <p class="page-subtitle">Discover amazing career opportunities with top companies. Apply now and take the next step in your career journey.</p>
+
+        </header>
+
+        <!-- Filter Section -->
+        <div class="filter-container">
+
+
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search jobs, skills, or companies...">
+            </div>
+        </div>
+
+        <!-- Requirements Modal -->
+        <div id="requirementsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Job Requirements</h3>
+                    <button class="close-modal" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Requirements will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Grid -->
+        {% if data %}
+        <div class="job-grid">
+            {% for i in data %}
+            <div class="job-card">
+                <div class="card-badge">
+                    <i class="fas fa-briefcase"></i>
+                    {{ i.fulltime_parttime }}
+                </div>
+
+                <div class="card-header">
+                    <div class="college-logo">
+                        {{ i.COMPANY.company_name|first|upper }}
+                    </div>
+                    <h2 class="college-name">{{ i.COMPANY.company_name }}</h2>
+
+                    <div class="college-info">
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ i.COMPANY.email }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ i.COMPANY.phone }}</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-map-pin"></i>
+                            <span>{{ i.COMPANY.place }}, {{ i.COMPANY.pin }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h3 class="job-title">{{ i.job_type }}</h3>
+
+                    <div class="job-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">Experience</span>
+                            <span class="meta-value">{{ i.experience }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Salary</span>
+                            <span class="meta-value salary">{{ i.salary }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Type</span>
+                            <span class="meta-value">{{ i.job_type }}</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Apply Window</span>
+                            <span class="meta-value">
+                                {% if i.apply_from_date and i.apply_to_date %}
+                                    {{ i.apply_from_date }} → {{ i.apply_to_date }}
+                                {% else %}
+                                    Available Now
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if i.skill %}
+                    <div class="skills-container">
+                        <span class="skills-label">Required Skills:</span>
+                        <div class="skills-tags">
+                            {% for skill in i.skill.split|slice:":4" %}
+                            <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
+                            {% if i.skill.split|length > 4 %}
+                            <span class="skill-tag">+{{ i.skill.split|length|add:"-4" }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-footer">
+                    <a href="http://www.google.com/maps/?q={{ i.COMPANY.latitude }},{{ i.COMPANY.longitude }}"
+                       class="action-btn btn-locate" target="_blank">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Locate
+                    </a>
+                    <button class="action-btn btn-requirements view-requirements-btn"
+                            data-vacancy-id="{{ i.id }}"
+                            data-college-name="{{ i.COMPANY.company_name }}"
+                            data-job-title="{{ i.job_type }}">
+                        <i class="fas fa-list-check"></i>
+                        Requirements
+                    </button>
+                    <a href="/upload_resume/{{ i.id }}#abc" class="action-btn btn-apply">
+                        <i class="fas fa-paper-plane"></i>
+                        Apply Now
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Footer for data view -->
+        <footer class="page-footer">
+            <p>💼 Showing <strong>{{ data|length }}</strong> active opportunities | Keep exploring and land your dream job!</p>
+        </footer>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h3>No Active Job Opportunities</h3>
+            <p>There are no vacancies currently open for applications within the active apply window.</p>
+            <p>Please check back later or explore other opportunities.</p>
+            <button class="refresh-btn">
+                <i class="fas fa-redo"></i>
+                Refresh Page
+            </button>
+        </div>
+        <!-- Footer for empty state -->
+        <footer class="page-footer">
+            <p>💼 No opportunities available at the moment | Check back soon for new openings!</p>
+        </footer>
+        {% endif %}
+    </div>
+
+    <!-- JavaScript - Moved outside the conditional blocks so it always loads -->
+    <script>
+        // Interactive Features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const jobCards = document.querySelectorAll('.job-card');
+
+                    jobCards.forEach(card => {
+                        const cardText = card.textContent.toLowerCase();
+                        if (cardText.includes(searchTerm)) {
+                            card.style.display = 'block';
+                            card.style.animation = 'slideUp 0.5s ease';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Filter functionality
+            const filterSelects = document.querySelectorAll('.filter-select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    console.log('Filter changed:', this.value);
+                });
+            });
+
+            // Page buttons
+            const pageButtons = document.querySelectorAll('.page-btn');
+            pageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    pageButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Refresh button
+            const refreshBtn = document.querySelector('.refresh-btn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                });
+            }
+
+            // Card hover effects enhancement
+            const cards = document.querySelectorAll('.job-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '1';
+                });
+            });
+
+            // Skill tags hover effect
+            const skillTags = document.querySelectorAll('.skill-tag');
+            skillTags.forEach(tag => {
+                tag.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px) scale(1.1)';
+                });
+
+                tag.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Apply button confirmation
+            const applyButtons = document.querySelectorAll('.btn-apply');
+            applyButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const jobCard = this.closest('.job-card');
+                    if (jobCard) {
+                        const jobTitle = jobCard.querySelector('.job-title').textContent;
+                        const collegeName = jobCard.querySelector('.college-name').textContent;
+
+                        if (!confirm(`Apply for ${jobTitle} at ${collegeName}?`)) {
+                            e.preventDefault();
+                        }
+                    }
+                });
+            });
+
+            // Requirements Modal Functionality
+            const modal = document.getElementById('requirementsModal');
+            const closeModal = document.getElementById('closeModal');
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.querySelector('.modal-title');
+
+            // Function to load requirements via AJAX
+            function loadRequirements(vacancyId, collegeName, jobTitle) {
+                // Update modal title
+                if (modalTitle) {
+                    modalTitle.textContent = `Requirements for ${jobTitle} at ${collegeName}`;
+                }
+
+                // Show loading state
+                if (modalBody) {
+                    modalBody.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary); margin-bottom: 20px;"></i>
+                            <p>Loading requirements...</p>
+                        </div>
+                    `;
+                }
+
+                // Fetch requirements data
+                fetch(`/get_requirements/${vacancyId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success && data.requirements && data.requirements.length > 0) {
+                            displayRequirements(data.requirements, collegeName, jobTitle);
+                        } else {
+                            if (modalBody) {
+                                modalBody.innerHTML = `
+                                    <div class="no-requirements">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <h3>No Requirements Found</h3>
+                                        <p>This job posting doesn't have specific requirements listed.</p>
+                                    </div>
+                                `;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching requirements:', error);
+                        if (modalBody) {
+                            modalBody.innerHTML = `
+                                <div class="no-requirements">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <h3>Error Loading Requirements</h3>
+                                    <p>Unable to load requirements. Please try again later.</p>
+                                    <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">Retry</button>
+                                </div>
+                            `;
+                        }
+                    });
+            }
+
+            // Function to display requirements in modal
+            function displayRequirements(requirements, collegeName, jobTitle) {
+                let requirementsHtml = '';
+
+                if (requirements && requirements.length > 0) {
+                    // Group by qualification type
+                    const groupedByType = {};
+                    requirements.forEach(req => {
+                        const type = req.type || 'General';
+                        if (!groupedByType[type]) {
+                            groupedByType[type] = [];
+                        }
+                        groupedByType[type].push(req);
+                    });
+
+                    // Build HTML for each type
+                    Object.keys(groupedByType).forEach(type => {
+                        requirementsHtml += `
+                            <div class="requirement-section">
+                                <h4 class="section-title">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    ${type} Requirements
+                                </h4>
+                                <ul class="qualification-list">
+                                    ${groupedByType[type].map(req => `
+                                        <li class="qualification-item">
+                                            <span class="qualification-skill">${escapeHtml(req.qualification_skill || req.skill || 'N/A')}</span>
+                                        </li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        `;
+                    });
+                } else {
+                    requirementsHtml = `
+                        <div class="no-requirements">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <h3>No Specific Requirements</h3>
+                            <p>This position doesn't have specific qualification requirements listed.</p>
+                        </div>
+                    `;
+                }
+
+                if (modalBody) {
+                    modalBody.innerHTML = requirementsHtml;
+                }
+            }
+
+            // Helper function to escape HTML
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // Add click event to all requirements buttons (including dynamically added ones)
+            function bindRequirementsButtons() {
+                const requirementButtons = document.querySelectorAll('.view-requirements-btn');
+                requirementButtons.forEach(button => {
+                    // Remove existing listener to avoid duplicates
+                    button.removeEventListener('click', button._listener);
+
+                    const listener = function() {
+                        const vacancyId = this.getAttribute('data-vacancy-id');
+                        const collegeName = this.getAttribute('data-college-name');
+                        const jobTitle = this.getAttribute('data-job-title');
+
+                        if (vacancyId && modal) {
+                            loadRequirements(vacancyId, collegeName, jobTitle);
+                            modal.style.display = 'flex';
+                            document.body.style.overflow = 'hidden';
+                        } else {
+                            console.error('Missing vacancy ID or modal element');
+                        }
+                    };
+
+                    button._listener = listener;
+                    button.addEventListener('click', listener);
+                });
+            }
+
+            // Initial binding
+            bindRequirementsButtons();
+
+            // Close modal when clicking X
+            if (closeModal) {
+                closeModal.addEventListener('click', function() {
+                    if (modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+
+            // Close modal when clicking outside
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Animate stats counter
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 30);
+        }
+
+        // Start animation when page loads
+        window.addEventListener('load', function() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                animateCounter(stat, target);
+            });
+
+            // Add floating animation to background elements
+            const floatingElements = document.querySelectorAll('.floating-bg');
+            floatingElements.forEach((el, index) => {
+                el.style.animation = `float ${15 + index * 5}s infinite linear`;
+            });
+        });
+
+        // Add floating animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+                25% { transform: translate(50px, 50px) rotate(90deg) scale(1.1); }
+                50% { transform: translate(0, 100px) rotate(180deg) scale(1); }
+                75% { transform: translate(-50px, 50px) rotate(270deg) scale(0.9); }
+                100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+            }
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+
+{% endblock %}

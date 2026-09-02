@@ -1,0 +1,249 @@
+{% extends "admin/index.html" %}
+{% block body %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Add Job Categories - Admin Panel</title>
+
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --primary-dark: #45a049;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #333;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+{#            padding: 20px;#}
+        }
+
+        .container {
+{#            max-width: 600px;#}
+            margin: 0 auto;
+{#            padding: 0 15px;#}
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: 25px 30px;
+            color: white;
+        }
+
+        .card-header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-header p {
+            margin: 8px 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .card-body {
+            padding: 35px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: #999;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Animation for form */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 25px 20px;
+            }
+
+            .card-header h1 {
+                font-size: 20px;
+            }
+        }
+
+        /* Success message styling (optional, can be added dynamically) */
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 20px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            border: 1px solid #c3e6cb;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e53935;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>Add Job Category</h1>
+                <p>Create a new job category for the system</p>
+            </div>
+
+            <div class="card-body">
+                <form action="/admin_add_job_category_post" method="post">
+                    <div class="form-group">
+                        <label for="categoryName" class="form-label required">Category Name</label>
+                        <input
+                            type="text"
+                            name="textfield"
+                            id="categoryName"
+                            class="form-control"
+                            placeholder="Enter category name (e.g., Information Technology, Marketing)"
+                            required
+                            maxlength="100"
+                        />
+                        <small style="color: #666; font-size: 13px; margin-top: 5px; display: block;">
+                            Enter a descriptive name for the job category
+                        </small>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-plus-circle" style="margin-right: 8px;"></i>
+                        Create Category
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Optional: Success message area -->
+        <!--
+        {% if success_message %}
+        <div class="alert-success" style="margin-top: 20px;">
+            <strong>Success!</strong> {{ success_message }}
+        </div>
+        {% endif %}
+        -->
+    </div>
+
+    <!-- Font Awesome for icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <script>
+        // Add focus effect to form field
+        document.getElementById('categoryName').addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+
+        document.getElementById('categoryName').addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+
+        // Form validation enhancement
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const input = document.getElementById('categoryName');
+            if (input.value.trim() === '') {
+                e.preventDefault();
+                input.style.borderColor = '#e53935';
+                input.focus();
+                return false;
+            }
+            return true;
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,413 @@
+{% extends "company/index.html" %}
+
+{% block body %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Submit Suggestions</title>
+   <style>
+    /* Scoped styles - only affects elements inside .suggestions-module */
+    .suggestions-module {
+        --primary: #10b981;
+        --primary-dark: #059669;
+        --primary-light: rgba(16, 185, 129, 0.1);
+        --secondary: #059669;
+        --accent: #34d399;
+        --dark: #111827;
+        --light: #ffffff;
+        --gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        --shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+        --glow: 0 0 20px rgba(16, 185, 129, 0.3);
+        --radius: 16px;
+    }
+
+    /* Container is now specific to suggestions module */
+    .suggestions-module {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* All styles are nested under .suggestions-module */
+    .suggestions-module .header-card {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow);
+        animation: suggestionsSlideDown 0.6s ease-out;
+    }
+
+    .suggestions-module .header-card h1 {
+        font-size: 2.2rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .suggestions-module .header-card h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+        box-shadow: var(--glow);
+    }
+
+    .suggestions-module .header-card p {
+        color: #6b7280;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-top: 15px;
+    }
+
+    .suggestions-module .complaint-form {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        animation: suggestionsFadeIn 0.8s ease-out 0.2s both;
+    }
+
+    .suggestions-module .form-group {
+        margin-bottom: 30px;
+    }
+
+    .suggestions-module .form-label {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .suggestions-module .form-label::before {
+        content: '📝';
+        font-size: 1.2rem;
+    }
+
+    .suggestions-module .form-control {
+        width: 100%;
+        background: white;
+        border: 2px solid #d1fae5;
+        border-radius: 12px;
+        padding: 18px 20px;
+        color: #111827;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        resize: vertical;
+        min-height: 160px;
+        line-height: 1.6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .suggestions-module .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: white;
+    }
+
+    .suggestions-module .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    .suggestions-module .char-counter {
+        text-align: right;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .suggestions-module .char-counter.warning {
+        color: #d97706;
+    }
+
+    .suggestions-module .char-counter.error {
+        color: #dc2626;
+    }
+
+    .suggestions-module .submit-btn {
+        display: block;
+        width: 100%;
+        background: var(--gradient);
+        border: none;
+        border-radius: 12px;
+        padding: 18px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 30px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .suggestions-module .submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .suggestions-module .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .suggestions-module .submit-btn:hover::before {
+        left: 100%;
+    }
+
+    .suggestions-module .submit-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .suggestions-module .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        background: #9ca3af;
+    }
+
+    .suggestions-module .success-message {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        margin-top: 20px;
+        animation: suggestionsSlideIn 0.5s ease-out;
+        display: none;
+    }
+
+    .suggestions-module .success-icon {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        animation: suggestionsBounce 1s ease infinite;
+    }
+
+    .suggestions-module .success-message h3 {
+        color: var(--primary-dark);
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+    }
+
+    .suggestions-module .success-message p {
+        color: #4b5563;
+        font-size: 1rem;
+    }
+
+    /* Scoped animations */
+    @keyframes suggestionsSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes suggestionsFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes suggestionsSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes suggestionsBounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    /* Responsive Design - Scoped */
+    @media (max-width: 768px) {
+        .suggestions-module .header-card,
+        .suggestions-module .complaint-form {
+            padding: 25px;
+        }
+
+        .suggestions-module .header-card h1 {
+            font-size: 1.8rem;
+        }
+
+        .suggestions-module .form-control {
+            padding: 15px;
+            min-height: 120px;
+        }
+
+        .suggestions-module .submit-btn {
+            padding: 15px;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .suggestions-module .header-card,
+        .suggestions-module .complaint-form {
+            padding: 20px;
+        }
+
+        .suggestions-module .header-card h1 {
+            font-size: 1.6rem;
+        }
+
+        .suggestions-module .form-label {
+            font-size: 1rem;
+        }
+    }
+</style>
+</head>
+
+<body>
+    <!-- Main wrapper with scoped class -->
+    <div class="suggestions-module">
+        <div class="header-card">
+            <h1>Submit Suggestions</h1>
+            <p>We value your feedback. Please describe your issue in detail and we'll address it promptly.</p>
+        </div>
+
+        <form action="/send_complaint_post2" method="post" enctype="multipart/form-data" name="form1" id="form1" class="complaint-form">
+            <div class="form-group">
+                <label for="textarea" class="form-label">Suggestions Details</label>
+                <textarea
+                    name="textarea"
+                    id="textarea"
+                    class="form-control"
+                    placeholder="Please provide detailed information about your Suggestions..."
+                    oninput="updateCharCount(this)"
+                    maxlength="1000"
+                    required></textarea>
+                <div id="charCount" class="char-counter">0/1000 characters</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Submit Suggestions</span>
+                <span id="btnLoader" style="display: none;">⏳ Processing...</span>
+            </button>
+
+            <div id="successMessage" class="success-message">
+                <div class="success-icon">✅</div>
+                <h3>Suggestions Submitted Successfully!</h3>
+                <p>Thank you for your feedback. We've received your Suggestions and will review it shortly.</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Scoped function - using const/let to avoid global scope pollution
+        (function() {
+            const form = document.getElementById('form1');
+            const textarea = document.getElementById('textarea');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const successMessage = document.getElementById('successMessage');
+            const charCount = document.getElementById('charCount');
+
+            // Character counter update
+            window.updateCharCount = function(element) {
+                const currentLength = element.value.length;
+                const maxLength = element.getAttribute('maxlength');
+                if (charCount) {
+                    charCount.textContent = `${currentLength}/${maxLength} characters`;
+
+                    if (currentLength > maxLength * 0.9) {
+                        charCount.classList.add('error');
+                        charCount.classList.remove('warning');
+                    } else if (currentLength > maxLength * 0.75) {
+                        charCount.classList.add('warning');
+                        charCount.classList.remove('error');
+                    } else {
+                        charCount.classList.remove('warning', 'error');
+                    }
+                }
+            };
+
+            // Initialize if textarea exists
+            if (textarea) {
+                window.updateCharCount(textarea);
+            }
+
+            // Form submission handling
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    if (textarea.value.trim().length < 10) {
+                        e.preventDefault();
+                        alert('Please provide more details (at least 10 characters)');
+                        textarea.focus();
+                        return;
+                    }
+
+                    if (textarea.value.trim().length > 1000) {
+                        e.preventDefault();
+                        alert('Please keep your Suggestions under 1000 characters');
+                        textarea.focus();
+                        return;
+                    }
+
+                    // Show loading state
+                    if (btnText && btnLoader && submitBtn) {
+                        btnText.style.display = 'none';
+                        btnLoader.style.display = 'inline';
+                        submitBtn.disabled = true;
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
+{% endblock %}

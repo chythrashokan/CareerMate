@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration | InterviewPro</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-color: #00D4FF;
+            --secondary-color: #6C63FF;
+            --accent-color: #FF6584;
+            --dark-color: #0A0A0F;
+            --darker-color: #050508;
+            --light-color: #F5F5F7;
+            --glass-bg: rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --gradient-primary: linear-gradient(135deg, #00D4FF 0%, #6C63FF 100%);
+            --gradient-secondary: linear-gradient(135deg, #FF6584 0%, #6C63FF 100%);
+            --gradient-dark: linear-gradient(135deg, #0A0A0F 0%, #1A1A2E 100%);
+            --gradient-black: linear-gradient(135deg, #000000 0%, #0F0F1E 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker-color);
+            color: var(--light-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 101, 132, 0.05) 0%, transparent 60%),
+                linear-gradient(45deg, #000000 0%, #0A0A0F 100%);
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+        }
+
+        .registration-container {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            min-height: 900px;
+            border-radius: 30px;
+            overflow: hidden;
+            background: rgba(5, 5, 8, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                0 0 100px rgba(108, 99, 255, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Left Panel - Brand & Info */
+        .registration-left {
+            flex: 1;
+            background: var(--gradient-black);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .registration-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(108, 99, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            opacity: 0.5;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 10px 25px rgba(0, 212, 255, 0.3),
+                0 0 50px rgba(108, 99, 255, 0.2);
+        }
+
+        .logo-icon i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 32px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 212, 255, 0.3);
+        }
+
+        .logo-sub {
+            font-size: 12px;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        .welcome-text {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 40px;
+        }
+
+        .welcome-text h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .welcome-text p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-top: 40px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .benefits-list li:hover {
+            background: rgba(108, 99, 255, 0.1);
+            border-color: var(--primary-color);
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .benefits-list li i {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Right Panel - Registration Form */
+        .registration-right {
+            flex: 1.5;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            max-height: 900px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+        }
+
+        .registration-form {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label span {
+            color: var(--primary-color);
+            margin-left: 5px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 15px 16px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 10px 25px rgba(0, 212, 255, 0.2),
+                0 0 0 1px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* File Upload Styles */
+        .file-upload-container {
+            position: relative;
+        }
+
+        .file-upload-area {
+            width: 100%;
+            height: 120px;
+            border: 2px dashed rgba(108, 99, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.1);
+        }
+
+        .file-upload-area i {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            max-width: 80%;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .remove-file-btn {
+            margin-top: 10px;
+            padding: 6px 15px;
+            background: rgba(255, 101, 132, 0.2);
+            border: 1px solid var(--accent-color);
+            border-radius: 6px;
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .remove-file-btn:hover {
+            background: rgba(255, 101, 132, 0.3);
+        }
+
+        .file-input-real,
+        .file-input-hidden {
+            display: none;
+        }
+
+        .file-upload-area.has-file {
+            border-color: var(--primary-color);
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .file-upload-area.has-file i {
+            color: var(--primary-color);
+        }
+
+        /* Radio Button Styles */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .radio-label:hover {
+            background: rgba(108, 99, 255, 0.1);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+
+        .radio-input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        /* Terms Checkbox */
+        .terms-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .checkbox-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .checkbox-label a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* Submit Button */
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+            box-shadow: 
+                0 10px 30px rgba(0, 212, 255, 0.3),
+                0 0 50px rgba(108, 99, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 35px rgba(0, 212, 255, 0.4),
+                0 0 80px rgba(108, 99, 255, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Login Link */
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .login-link a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .login-link a:hover::after {
+            width: 100%;
+        }
+
+        /* Validation Styles */
+        .error-message {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .form-input.error {
+            border-color: var(--accent-color);
+        }
+
+        .form-input.valid {
+            border-color: var(--primary-color);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 20px 0;
+            display: none;
+            align-items: center;
+        }
+
+        .success-message i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.15;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+            background: var(--gradient-secondary);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(20px, 20px) rotate(90deg); }
+            50% { transform: translate(0, 40px) rotate(180deg); }
+            75% { transform: translate(-20px, 20px) rotate(270deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .registration-container {
+                max-width: 1000px;
+                min-height: auto;
+            }
+            
+            .registration-left,
+            .registration-right {
+                padding: 40px;
+            }
+            
+            .welcome-text h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .registration-container {
+                flex-direction: column;
+            }
+            
+            .registration-left {
+                padding: 40px;
+            }
+            
+            .registration-right {
+                padding: 40px;
+                max-height: none;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .registration-left,
+            .registration-right {
+                padding: 30px 20px;
+            }
+            
+            .welcome-text h1 {
+                font-size: 2rem;
+            }
+            
+            .form-header h2 {
+                font-size: 2rem;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .file-upload-area {
+                height: 100px;
+            }
+        }
+
+        /* Neon glow effect for selected inputs */
+        .form-input:focus {
+            animation: neonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from {
+                box-shadow: 
+                    0 10px 25px rgba(0, 212, 255, 0.2),
+                    0 0 0 1px rgba(0, 212, 255, 0.2),
+                    0 0 20px rgba(0, 212, 255, 0.1);
+            }
+            to {
+                box-shadow: 
+                    0 10px 25px rgba(0, 212, 255, 0.3),
+                    0 0 0 1px rgba(0, 212, 255, 0.3),
+                    0 0 40px rgba(0, 212, 255, 0.2);
+            }
+        }
+
+        /* Custom scrollbar */
+        .registration-right::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .registration-right::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .registration-right::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 10px;
+        }
+
+        .registration-right::-webkit-scrollbar-thumb:hover {
+            background: var(--gradient-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <!-- Left Panel -->
+        <div class="registration-left">
+            <!-- Floating Elements -->
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            
+            <div class="brand-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-main">INTERVIEWPRO</div>
+                    <div class="logo-sub">CANDIDATE PORTAL</div>
+                </div>
+            </div>
+            
+            <div class="welcome-text">
+                <h1>Launch Your Career!</h1>
+                <p>Join thousands of successful candidates who have landed their dream jobs through AI-powered interview practice and personalized coaching.</p>
+            </div>
+            
+            <ul class="benefits-list">
+                <li>
+                    <i class="fas fa-robot"></i>
+                    <span><strong>AI Interview Simulations</strong> - Practice with intelligent AI that adapts to your responses</span>
+                </li>
+                <li>
+                    <i class="fas fa-chart-line"></i>
+                    <span><strong>Real-time Feedback</strong> - Get instant analysis on your performance and areas for improvement</span>
+                </li>
+                <li>
+                    <i class="fas fa-briefcase"></i>
+                    <span><strong>Industry-specific Practice</strong> - Prepare for interviews in your specific field</span>
+                </li>
+                <li>
+                    <i class="fas fa-trophy"></i>
+                    <span><strong>Track Your Progress</strong> - Monitor your improvement with detailed analytics and reports</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="registration-right">
+            <div class="form-header">
+                <h2>Candidate Registration</h2>
+                <p>Create your account to start your interview preparation journey</p>
+            </div>
+            
+            <form action="/register_student_post" method="post" class="registration-form" enctype="multipart/form-data" id="registrationForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-user"></i> Personal Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">First Name <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-user"></i></div>
+                                <input type="text" name="f_n" class="form-input" placeholder="Enter your first name" required>
+                            </div>
+                            <div class="error-message" id="firstNameError">Please enter your first name</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Last Name <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-user"></i></div>
+                                <input type="text" name="l_n" class="form-input" placeholder="Enter your last name" required>
+                            </div>
+                            <div class="error-message" id="lastNameError">Please enter your last name</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Profile Photo <span>*</span></label>
+                        <div class="file-upload-container">
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <div class="file-upload-text">Click to upload your profile photo</div>
+                                <div class="file-name" id="fileName"></div>
+                                <button type="button" class="remove-file-btn" id="removeFileBtn" style="display: none;">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                            <!-- Hidden file input that will actually be submitted -->
+                            <input type="file" name="photo" id="photoInputReal" class="file-input-real" accept="image/*" required>
+                            <!-- Dummy input for click handling -->
+                            <input type="file" id="photoInputDummy" class="file-input-hidden" accept="image/*">
+                        </div>
+                        <div class="error-message" id="photoError">Please upload your profile photo</div>
+                        <div class="success-message" id="photoSuccess">
+                            <i class="fas fa-check-circle"></i> Photo selected successfully
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Gender <span>*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="male" class="radio-input" required>
+                                <i class="fas fa-male"></i> Male
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="female" class="radio-input" required>
+                                <i class="fas fa-female"></i> Female
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="gender" value="other" class="radio-input" required>
+                                <i class="fas fa-user"></i> Other
+                            </label>
+                        </div>
+                        <div class="error-message" id="genderError">Please select your gender</div>
+                    </div>
+                </div>
+                
+                <!-- Education & Contact -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-graduation-cap"></i> Education & Contact</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Qualification <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <input type="text" name="q_f" class="form-input" placeholder="e.g., B.Tech, MBA, etc." required>
+                            </div>
+                            <div class="error-message" id="qualificationError">Please enter your qualification</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-envelope"></i></div>
+                                <input type="email" name="e_m" class="form-input" placeholder="your.email@example.com" required>
+                            </div>
+                            <div class="error-message" id="emailError">Please enter a valid email address</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-phone"></i></div>
+                                <input type="tel" name="p_h" class="form-input" placeholder="9876543210" pattern="[6-9][0-9]{9}" required>
+                            </div>
+                            <div class="error-message" id="phoneError">Please enter a valid 10-digit phone number</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Current City <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <input type="text" name="p_c" class="form-input" placeholder="e.g., Mumbai, Delhi, Bangalore" required>
+                            </div>
+                            <div class="error-message" id="cityError">Please enter your current city</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Current Position/Role <span>*</span></label>
+                        <div class="input-group">
+                            <div class="input-icon"><i class="fas fa-briefcase"></i></div>
+                            <input type="text" name="p_t" class="form-input" placeholder="e.g., Software Engineer, Marketing Manager, etc." required>
+                        </div>
+                        <div class="error-message" id="positionError">Please enter your current position/role</div>
+                    </div>
+                </div>
+                
+                <!-- Security -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-lock"></i> Security Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Password <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-key"></i></div>
+                                <input type="password" name="p_w" id="password" class="form-input" placeholder="Enter password (min 6 characters)" minlength="6" required>
+                                <div class="password-toggle" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5);">
+                                    <i class="fas fa-eye" id="togglePassword"></i>
+                                </div>
+                            </div>
+                            <div class="error-message" id="passwordError">Password must be at least 6 characters long</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password <span>*</span></label>
+                            <div class="input-group">
+                                <div class="input-icon"><i class="fas fa-key"></i></div>
+                                <input type="password" name="cpd" id="confirmPassword" class="form-input" placeholder="Confirm your password" required>
+                                <div class="password-toggle" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5);">
+                                    <i class="fas fa-eye" id="toggleConfirmPassword"></i>
+                                </div>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+                        </div>
+                    </div>
+                    
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="terms" name="terms" class="checkbox-input" required>
+                        <label for="terms" class="checkbox-label">
+                            I agree to all statements in <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
+                        </label>
+                    </div>
+                    <div class="error-message" id="termsError">Please accept the terms and conditions</div>
+                </div>
+                
+                <!-- Submit -->
+                <button type="submit" class="submit-button" id="submitButton">
+                    <i class="fas fa-user-plus"></i>
+                    CREATE CANDIDATE ACCOUNT
+                </button>
+                
+                <div class="login-link">
+                    Already have an account? <a href="/log">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('registrationForm');
+        const submitButton = document.getElementById('submitButton');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileNameDisplay = document.getElementById('fileName');
+        const photoInputReal = document.getElementById('photoInputReal');
+        const photoInputDummy = document.getElementById('photoInputDummy');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const photoError = document.getElementById('photoError');
+        const photoSuccess = document.getElementById('photoSuccess');
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        
+        // File Upload Handling
+        let selectedFile = null;
+        
+        // Handle click on upload area
+        fileUploadArea.addEventListener('click', function(e) {
+            if (e.target !== removeFileBtn && !removeFileBtn.contains(e.target)) {
+                photoInputDummy.click();
+            }
+        });
+        
+        // Handle file selection from dummy input
+        photoInputDummy.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                handleFileSelection(file);
+            }
+        });
+        
+        // Handle file selection from real input (if triggered programmatically)
+        photoInputReal.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                handleFileSelection(file);
+            }
+        });
+        
+        // Remove file button
+        removeFileBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering the file upload area click
+            resetFileUpload();
+        });
+        
+        function handleFileSelection(file) {
+            // Validate file
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            
+            if (!validTypes.includes(file.type.toLowerCase())) {
+                alert('Please upload only JPG, PNG, GIF, or WebP images');
+                resetFileUpload();
+                return;
+            }
+            
+            if (file.size > maxSize) {
+                alert('File size must be less than 5MB');
+                resetFileUpload();
+                return;
+            }
+            
+            // Store the file
+            selectedFile = file;
+            
+            // Create a FileList object for the real input
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            photoInputReal.files = dataTransfer.files;
+            
+            // Update UI
+            updateFileDisplay(file);
+            
+            // Clear any previous errors
+            photoError.style.display = 'none';
+            photoSuccess.style.display = 'flex';
+        }
+        
+        function updateFileDisplay(file) {
+            // Update file name display
+            fileNameDisplay.textContent = file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name;
+            
+            // Show remove button
+            removeFileBtn.style.display = 'flex';
+            
+            // Update upload area style
+            fileUploadArea.classList.add('has-file');
+            
+            // Update icon
+            const icon = fileUploadArea.querySelector('i');
+            icon.className = 'fas fa-check-circle';
+            icon.style.color = 'var(--primary-color)';
+        }
+        
+        function resetFileUpload() {
+            // Reset the real file input
+            photoInputReal.value = '';
+            
+            // Reset the dummy file input
+            photoInputDummy.value = '';
+            
+            // Clear stored file
+            selectedFile = null;
+            
+            // Reset UI
+            fileNameDisplay.textContent = '';
+            removeFileBtn.style.display = 'none';
+            fileUploadArea.classList.remove('has-file');
+            photoSuccess.style.display = 'none';
+            
+            // Reset icon
+            const icon = fileUploadArea.querySelector('i');
+            icon.className = 'fas fa-cloud-upload-alt';
+            icon.style.color = 'var(--primary-color)';
+        }
+        
+        // Password visibility toggle
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+        
+        // Form Validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Reset all errors
+            document.querySelectorAll('.error-message').forEach(error => {
+                error.style.display = 'none';
+            });
+            
+            // Reset input error states
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('error');
+            });
+            
+            // Validate required fields
+            const requiredInputs = form.querySelectorAll('[required]');
+            requiredInputs.forEach(input => {
+                if (input.type === 'checkbox' && !input.checked) {
+                    return; // Handled separately
+                }
+                if (input.type !== 'file' && input.type !== 'radio' && !input.value.trim()) {
+                    showError(input, 'This field is required');
+                    isValid = false;
+                }
+            });
+            
+            // Validate email
+            const emailInput = form.querySelector('input[type="email"]');
+            if (emailInput && emailInput.value.trim()) {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(emailInput.value)) {
+                    showError(emailInput, 'Please enter a valid email address');
+                    isValid = false;
+                }
+            }
+            
+            // Validate phone
+            const phoneInput = form.querySelector('input[name="p_h"]');
+            if (phoneInput && phoneInput.value.trim()) {
+                const phonePattern = /^[6-9]\d{9}$/;
+                if (!phonePattern.test(phoneInput.value)) {
+                    showError(phoneInput, 'Please enter a valid 10-digit phone number');
+                    isValid = false;
+                }
+            }
+            
+            // Validate password match
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+            if (password.value !== confirmPassword.value) {
+                const errorElement = document.getElementById('confirmPasswordError');
+                errorElement.style.display = 'block';
+                confirmPassword.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate password length
+            if (password.value.length < 6) {
+                const errorElement = document.getElementById('passwordError');
+                errorElement.style.display = 'block';
+                password.classList.add('error');
+                isValid = false;
+            }
+            
+            // Validate file upload
+            if (!photoInputReal.files || photoInputReal.files.length === 0) {
+                photoError.style.display = 'block';
+                isValid = false;
+            } else {
+                photoError.style.display = 'none';
+            }
+            
+            // Validate gender
+            const genderSelected = form.querySelector('input[name="gender"]:checked');
+            if (!genderSelected) {
+                const genderError = document.getElementById('genderError');
+                genderError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate terms
+            const termsCheckbox = document.getElementById('terms');
+            if (!termsCheckbox.checked) {
+                const termsError = document.getElementById('termsError');
+                termsError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        function showError(input, message) {
+            // Find or create error element
+            const formGroup = input.closest('.form-group');
+            if (formGroup) {
+                let errorElement = formGroup.querySelector('.error-message');
+                if (!errorElement) {
+                    // Create error element if it doesn't exist
+                    errorElement = document.createElement('div');
+                    errorElement.className = 'error-message';
+                    formGroup.appendChild(errorElement);
+                }
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            
+            // Add error class to input
+            input.classList.add('error');
+        }
+        
+        // Real-time validation for inputs
+        const inputs = form.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    showError(this, 'This field is required');
+                } else {
+                    // Remove error styling
+                    this.classList.remove('error');
+                    
+                    // Clear any error message
+                    const formGroup = this.closest('.form-group');
+                    if (formGroup) {
+                        const errorElement = formGroup.querySelector('.error-message');
+                        if (errorElement) {
+                            errorElement.style.display = 'none';
+                        }
+                    }
+                }
+            });
+            
+            // Real-time validation for phone number
+            if (input.name === 'p_h') {
+                input.addEventListener('input', function() {
+                    const phonePattern = /^[6-9]\d{0,9}$/;
+                    if (this.value && !phonePattern.test(this.value)) {
+                        this.value = this.value.slice(0, -1);
+                    }
+                });
+            }
+        });
+        
+        // Password match validation in real-time
+        confirmPasswordInput.addEventListener('input', function() {
+            if (passwordInput.value !== confirmPasswordInput.value && confirmPasswordInput.value !== '') {
+                const errorElement = document.getElementById('confirmPasswordError');
+                errorElement.style.display = 'block';
+                confirmPasswordInput.classList.add('error');
+            } else {
+                const errorElement = document.getElementById('confirmPasswordError');
+                errorElement.style.display = 'none';
+                confirmPasswordInput.classList.remove('error');
+            }
+        });
+        
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Show loading state
+                const originalText = submitButton.innerHTML;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+                submitButton.disabled = true;
+                
+                try {
+                    // Create FormData object
+                    const formData = new FormData(this);
+                    
+                    // For demo purposes - log what would be submitted
+                    console.log('Form data to be submitted:');
+                    for (let [key, value] of formData.entries()) {
+                        if (key === 'photo') {
+                            console.log(`${key}: ${value.name} (${value.type}, ${value.size} bytes)`);
+                        } else {
+                            console.log(`${key}: ${value}`);
+                        }
+                    }
+                    
+                    // Simulate API call delay
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // In a real application, you would submit to the server:
+                    const response = await fetch('/register_student_post', {
+                         method: 'POST',
+                         body: formData
+                    });
+                    console.log('Server response:', response);
+
+                    if (!response.ok) {
+                    alert('Email already exists or Password does not match');
+                    }
+                    else {
+                    alert('Registered successfully');       
+                    window.location.href = '/';
+                     // Reset form after successful submission
+                    this.reset();
+                    resetFileUpload();
+                    }   
+                    
+                    // For this demo, show success message
+                    
+                   
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                } finally {
+                    // Restore button
+                    submitButton.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }
+            } else {
+                // Scroll to first error
+                const firstError = document.querySelector('.error-message[style*="display: block"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        });
+        
+        // Add some visual feedback for radio buttons
+        document.querySelectorAll('.radio-label').forEach(label => {
+            label.addEventListener('click', function() {
+                document.querySelectorAll('.radio-label').forEach(l => {
+                    l.style.opacity = '0.7';
+                });
+                this.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>

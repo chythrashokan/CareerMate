@@ -1,0 +1,622 @@
+{% extends "candidate/index.html" %}
+
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume | Job Portal</title>
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --primary-light: rgba(16, 185, 129, 0.1);
+            --gray-light: #f9fafb;
+            --gray: #6b7280;
+            --gray-dark: #374151;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.1);
+            --shadow-lg: 0 10px 25px rgba(16, 185, 129, 0.15);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0fdf4 0%, #f8fafc 100%);
+            color: var(--gray-dark);
+        }
+
+        .upload-container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .upload-header {
+            background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .upload-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .upload-header h1 i {
+            font-size: 2.2rem;
+        }
+
+        .upload-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .upload-form {
+            padding: 40px;
+        }
+
+        .file-upload-area {
+            margin-bottom: 30px;
+        }
+
+        .upload-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1rem;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            border: 2px dashed var(--primary);
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            text-align: center;
+            background: var(--primary-light);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .file-input-wrapper.drag-over {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--primary-dark);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .file-input-text {
+            color: var(--gray-dark);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .file-input-subtext {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .custom-file-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .custom-file-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .selected-file {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--gray-light);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+
+        .selected-file.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .file-details h4 {
+            font-size: 1rem;
+            color: var(--gray-dark);
+            margin-bottom: 4px;
+        }
+
+        .file-details p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .file-size {
+            margin-left: auto;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .formats-info {
+            background: var(--gray-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 25px;
+        }
+
+        .formats-info h4 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .formats-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .format-tag {
+            background: white;
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid var(--border);
+        }
+
+        .submit-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .submit-button {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 200px;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .submit-button i {
+            font-size: 1.2rem;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .upload-footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--gray);
+            font-size: 0.9rem;
+            background: var(--gray-light);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: var(--primary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .upload-container {
+                max-width: 100%;
+            }
+
+            .upload-form {
+                padding: 30px 20px;
+            }
+
+            .upload-header {
+                padding: 25px 20px;
+            }
+
+            .upload-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .submit-button {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .upload-header h1 {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .formats-list {
+                justify-content: center;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="upload-container" style="margin-left: 30%">
+        <div class="upload-header">
+            <h1>
+                <i class="fas fa-file-upload"></i>
+                Upload Resume
+            </h1>
+            <p>Submit your resume to apply for this position</p>
+        </div>
+
+        <form action="/upload_resume_post/{{ id }}" method="post" enctype="multipart/form-data" name="form1" id="form1" class="upload-form">
+            {% csrf_token %}
+
+            <div class="file-upload-area">
+                <label class="upload-label">Select Your Resume</label>
+                <div class="file-input-wrapper" id="dropArea">
+                    <input type="file" name="fileField" id="fileField" class="file-input" accept=".pdf,.doc,.docx,.txt,image/*" required>
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="file-input-text">Drag & drop your resume here</div>
+                    <div class="file-input-subtext">or click to browse files</div>
+                    <div class="custom-file-button">
+                        <i class="fas fa-folder-open"></i>
+                        Choose File
+                    </div>
+                </div>
+
+                <div class="selected-file" id="selectedFile">
+                    <div class="file-info">
+                        <i class="fas fa-file-pdf file-icon"></i>
+                        <div class="file-details">
+                            <h4 id="fileName">No file selected</h4>
+                            <p id="fileType">Please select a resume file</p>
+                        </div>
+                        <div class="file-size" id="fileSize">0 KB</div>
+                    </div>
+                </div>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0% Uploaded</div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button type="submit" class="submit-button" id="submitButton">
+                    <i class="fas fa-paper-plane"></i>
+                    Upload Resume
+                    <div class="loading-spinner" id="loadingSpinner"></div>
+                </button>
+            </div>
+        </form>
+
+        <div class="upload-footer">
+            <p>Maximum file size: 10MB | Your resume will be securely uploaded</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileField');
+            const dropArea = document.getElementById('dropArea');
+            const selectedFile = document.getElementById('selectedFile');
+            const fileName = document.getElementById('fileName');
+            const fileType = document.getElementById('fileType');
+            const fileSize = document.getElementById('fileSize');
+            const submitButton = document.getElementById('submitButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const customButton = document.querySelector('.custom-file-button');
+
+            // Click on custom button triggers file input
+            customButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+
+            // File input change event
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    updateFileInfo(this.files[0]);
+                }
+            });
+
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropArea.classList.add('drag-over');
+            }
+
+            function unhighlight() {
+                dropArea.classList.remove('drag-over');
+            }
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    updateFileInfo(files[0]);
+                }
+            }
+
+            // Update file information display
+            function updateFileInfo(file) {
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                const fileSizeKB = (file.size / 1024).toFixed(2);
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+
+                // Set file name
+                fileName.textContent = file.name;
+
+                // Set file type
+                const fileTypes = {
+                    'pdf': 'PDF Document',
+                    'doc': 'Word Document',
+                    'docx': 'Word Document',
+                    'txt': 'Text File',
+                    'jpg': 'JPEG Image',
+                    'jpeg': 'JPEG Image',
+                    'png': 'PNG Image',
+                    'gif': 'GIF Image'
+                };
+
+                fileType.textContent = fileTypes[fileExtension] || 'Unknown File Type';
+
+                // Set file size
+                if (file.size > 1024 * 1024) {
+                    fileSize.textContent = `${fileSizeMB} MB`;
+                } else {
+                    fileSize.textContent = `${fileSizeKB} KB`;
+                }
+
+                // Update file icon based on type
+                const fileIcon = selectedFile.querySelector('.file-icon');
+                if (fileExtension === 'pdf') {
+                    fileIcon.className = 'fas fa-file-pdf file-icon';
+                    fileIcon.style.color = '#ef4444';
+                } else if (['doc', 'docx'].includes(fileExtension)) {
+                    fileIcon.className = 'fas fa-file-word file-icon';
+                    fileIcon.style.color = '#3b82f6';
+                } else if (fileExtension === 'txt') {
+                    fileIcon.className = 'fas fa-file-alt file-icon';
+                    fileIcon.style.color = '#6b7280';
+                } else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                    fileIcon.className = 'fas fa-file-image file-icon';
+                    fileIcon.style.color = '#10b981';
+                } else {
+                    fileIcon.className = 'fas fa-file file-icon';
+                    fileIcon.style.color = '#10b981';
+                }
+
+                // Show selected file info
+                selectedFile.classList.add('show');
+
+                // Enable submit button
+                submitButton.disabled = false;
+
+                // Validate file size (max 10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File size exceeds 10MB limit. Please choose a smaller file.');
+                    resetFileInput();
+                    return;
+                }
+
+                // Validate file type
+                const allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'jpg', 'jpeg', 'png', 'gif'];
+                if (!allowedExtensions.includes(fileExtension)) {
+                    alert('Please upload a valid resume file (PDF, Word, Text, or Image).');
+                    resetFileInput();
+                    return;
+                }
+            }
+
+            // Reset file input
+            function resetFileInput() {
+                fileInput.value = '';
+                selectedFile.classList.remove('show');
+                submitButton.disabled = true;
+            }
+
+            // Form submission
+            document.getElementById('form1').addEventListener('submit', function(e) {
+                if (!fileInput.files.length) {
+                    e.preventDefault();
+                    alert('Please select a resume file to upload.');
+                    return;
+                }
+
+                // Show loading state
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<div class="loading-spinner"></div> Uploading...';
+
+                // Show progress bar
+                progressContainer.style.display = 'block';
+
+                // Simulate upload progress (in real app, use XMLHttpRequest with progress events)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = progress + '% Uploaded';
+
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        progressText.textContent = 'Upload Complete! Redirecting...';
+                    }
+                }, 200);
+            });
+
+            // Initialize submit button as disabled
+            submitButton.disabled = true;
+
+            // Add animation to upload icon
+            setInterval(() => {
+                const uploadIcon = document.querySelector('.upload-icon');
+                uploadIcon.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    uploadIcon.style.transform = 'translateY(0)';
+                }, 500);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

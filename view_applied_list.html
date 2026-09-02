@@ -1,0 +1,1281 @@
+
+
+{% extends "candidate/index.html" %}
+
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Tracker | InterviewSimulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    :root {
+        --primary: #10b981;
+        --primary-dark: #059669;
+        --primary-light: rgba(16, 185, 129, 0.1);
+        --secondary: #dc2626;
+        --accent: #34d399;
+        --dark: #111827;
+        --light: #ffffff;
+        --gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        --gradient-dark: linear-gradient(135deg, #111827 0%, #374151 100%);
+        --shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+        --glow: 0 0 20px rgba(16, 185, 129, 0.3);
+        --radius: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: #f9fafb;
+        color: #111827;
+        min-height: 100vh;
+        background-image:
+            radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 40%);
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    /* Header Styles */
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .page-header h1 {
+        font-size: 2.8rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+    }
+
+    .page-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+        box-shadow: var(--glow);
+    }
+
+    .page-subtitle {
+        font-size: 1.2rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-weight: 300;
+    }
+
+    /* Stats Overview */
+    .stats-overview {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: var(--radius);
+        padding: 25px;
+        border: 1px solid #d1fae5;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.05), transparent);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.2);
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto 15px;
+        background: var(--gradient);
+        color: white;
+        border: 2px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+        display: block;
+    }
+
+    .stat-label {
+        color: #6b7280;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 500;
+        margin-top: 5px;
+    }
+
+    /* Application Table Container */
+    .table-container {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 30px;
+        margin-bottom: 40px;
+        overflow-x: auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Table Styles */
+    .application-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .application-table thead {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
+    }
+
+    .application-table th {
+        padding: 20px;
+        text-align: left;
+        color: var(--primary-dark);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+    }
+
+    .application-table th::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--gradient);
+    }
+
+    .application-table td {
+        padding: 20px;
+        color: #374151;
+        border-bottom: 1px solid #f3f4f6;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .application-table tbody tr {
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .application-table tbody tr:hover {
+        background: rgba(16, 185, 129, 0.05);
+        transform: scale(1.01);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .application-table tbody tr:hover td {
+        color: #111827;
+    }
+
+    .application-table tbody tr:nth-child(even) {
+        background: #f9fafb;
+    }
+
+    .application-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+        border: 1px solid #fbbf24;
+    }
+
+    .status-approved {
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        border: 1px solid #34d399;
+    }
+
+    .status-rejected {
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        border: 1px solid #f87171;
+    }
+
+    .status-interview {
+        background: rgba(139, 92, 246, 0.1);
+        color: #7c3aed;
+        border: 1px solid #a78bfa;
+    }
+
+    .status-selected {
+        background: rgba(59, 130, 246, 0.1);
+        color: #2563eb;
+        border: 1px solid #60a5fa;
+    }
+
+    /* Date & Time Styling */
+    .datetime-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .date-label {
+        font-size: 0.9rem;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    .time-label {
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: white;
+        border-radius: var(--radius);
+        border: 2px dashed #d1fae5;
+        backdrop-filter: blur(10px);
+        margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-state-icon {
+        font-size: 80px;
+        color: #d1fae5;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .empty-state h3 {
+        font-size: 2rem;
+        color: #111827;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+
+    .apply-btn {
+        background: var(--gradient);
+        color: white;
+        border: none;
+        padding: 14px 35px;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1rem;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        text-decoration: none;
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .apply-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+        border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 40px;
+    }
+
+    .page-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        border: 1px solid #d1d5db;
+        background: white;
+        color: #374151;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .page-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-3px);
+        background: rgba(16, 185, 129, 0.05);
+    }
+
+    .page-btn.active {
+        background: var(--gradient);
+        color: white;
+        border-color: var(--primary);
+        box-shadow: var(--glow);
+    }
+
+    /* Footer */
+    .page-footer {
+        text-align: center;
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+        }
+
+        .stats-overview {
+            grid-template-columns: 1fr;
+        }
+
+        .table-container {
+            padding: 15px;
+        }
+
+        .application-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .application-table th,
+        .application-table td {
+            padding: 12px 8px;
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            min-width: 80px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+    }
+
+    /* Floating elements for background */
+    .floating-bg {
+        position: fixed;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .floating-bg:nth-child(1) {
+        top: 10%;
+        right: 5%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.3;
+        animation: float 20s infinite linear;
+    }
+
+    .floating-bg:nth-child(2) {
+        bottom: 20%;
+        left: 5%;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.2;
+        animation: float 25s infinite linear reverse;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        25% { transform: translate(50px, 50px) rotate(90deg) scale(1.1); }
+        50% { transform: translate(0, 100px) rotate(180deg) scale(1); }
+        75% { transform: translate(-50px, 50px) rotate(270deg) scale(0.9); }
+        100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+    }
+
+    /* Action Buttons */
+    .action-btns {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        background: white;
+        color: #374151;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-btn.view {
+        color: var(--primary);
+        border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .action-btn.view:hover {
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .action-btn.delete {
+        color: var(--secondary);
+        border-color: rgba(220, 38, 38, 0.3);
+    }
+
+    .action-btn.delete:hover {
+        background: rgba(220, 38, 38, 0.1);
+    }
+
+    .action-btn.attend-exam {
+        width: auto !important;
+        height: auto !important;
+        padding: 8px 16px !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border: 1px solid rgba(16, 185, 129, 0.5) !important;
+        background: var(--gradient) !important;
+        color: white !important;
+        gap: 8px;
+        display: inline-flex !important;
+        align-items: center;
+        animation: pulse-glow 2s ease-in-out infinite;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .action-btn.attend-exam:hover:not(:disabled),
+    .action-btn.attend-exam.enabled:hover {
+        transform: translateY(-3px) scale(1.05) !important;
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4) !important;
+        filter: brightness(1.1);
+    }
+
+    .action-btn.attend-exam:disabled,
+    .action-btn.attend-exam.disabled-state {
+        animation: none !important;
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        background: #9ca3af !important;
+        border-color: #d1d5db !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .action-btn.attend-exam.enabled {
+        opacity: 1 !important;
+        cursor: pointer !important;
+        animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+        50% {
+            box-shadow: 0 5px 25px rgba(16, 185, 129, 0.5);
+        }
+    }
+
+    /* Enhanced Card-Based Design */
+    .applications-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .app-card {
+        background: white;
+        border: 1px solid #d1fae5;
+        border-radius: 20px;
+        padding: 25px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .app-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, transparent, rgba(16, 185, 129, 0.05), transparent);
+        opacity: 0;
+        transition: opacity 0.6s ease;
+        pointer-events: none;
+    }
+
+    .app-card:hover {
+        transform: translateY(-12px) scale(1.02);
+        border-color: var(--primary);
+        box-shadow: 0 20px 50px rgba(16, 185, 129, 0.2);
+    }
+
+    .app-card:hover::before {
+        opacity: 1;
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .college-info {
+        flex: 1;
+    }
+
+    .college-name {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--primary);
+        margin-bottom: 5px;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .college-location {
+        font-size: 0.85rem;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .status-pill {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        animation: statusPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes statusPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    .card-body {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .job-section {
+        margin-bottom: 18px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .job-section:last-child {
+        border-bottom: none;
+    }
+
+    .section-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6b7280;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .section-label i {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+
+    .job-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .job-meta {
+        display: flex;
+        gap: 12px;
+        font-size: 0.85rem;
+        color: #6b7280;
+        flex-wrap: wrap;
+    }
+
+    .meta-badge {
+        background: rgba(16, 185, 129, 0.1);
+        padding: 4px 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        color: var(--primary-dark);
+    }
+
+    .date-time-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .date-time-item {
+        background: rgba(16, 185, 129, 0.05);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #d1fae5;
+        transition: all 0.3s ease;
+    }
+
+    .date-time-item:hover {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--primary);
+    }
+
+    .dt-label {
+        font-size: 0.7rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .dt-value {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .dt-pending {
+        color: #d97706;
+        font-style: italic;
+        font-size: 0.9rem;
+    }
+
+    .salary-section {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #d1fae5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .salary-amount {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .employment-type {
+        background: rgba(16, 185, 129, 0.2);
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .card-footer {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-action-btn {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1.5px solid;
+        background: transparent;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .card-action-btn.view-btn {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: rgba(16, 185, 129, 0.1);
+    }
+
+    .card-action-btn.view-btn:hover {
+        background: rgba(16, 185, 129, 0.2);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .card-action-btn.withdraw-btn {
+        border-color: var(--secondary);
+        color: var(--secondary);
+        background: rgba(220, 38, 38, 0.1);
+    }
+
+    .card-action-btn.withdraw-btn:hover {
+        background: rgba(220, 38, 38, 0.2);
+        box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .app-card.no-data {
+        grid-column: 1 / -1;
+    }
+
+    /* Scrollbar Styling */
+    .table-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    }
+
+    /* Selection Styling */
+    ::selection {
+        background: rgba(16, 185, 129, 0.2);
+        color: #111827;
+    }
+</style>
+</head>
+<body>
+    <!-- Background Floating Elements -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+
+    <div class="container">
+        <!-- Header Section -->
+        <header class="page-header">
+            <h1>Application Tracker</h1>
+            <p class="page-subtitle">Track all your job applications in one place. Monitor your application status and stay updated on your career progress.</p>
+        </header>
+
+        <!-- Stats Overview -->
+    
+
+        {% if data %}
+        <!-- Application Table -->
+        <div class="table-container">
+            <table class="application-table">
+                <thead>
+                    <tr>
+                        <th>Sl.No</th>
+                        <th>Company</th>
+                        <th>Job Position</th>
+                        <th>Application Date</th>
+                        <th>Status</th>
+                        <th>Exam Date & Time</th>
+                        <th>Interview Date & Time With Bot</th>
+                        <th>Interview Date & Time With Team</th>
+                        <th>Salary</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--primary);">{{ i.VACANCY.COMPANY.company_name }}</div>
+                            <div style="font-size: 0.85rem; color: rgba(1,5,10,0.6);">📍 {{ i.VACANCY.COMPANY.place }}</div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;">{{ i.VACANCY.job_type }}</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">Exp: {{ i.VACANCY.experience }} years</div>
+                        </td>
+                        <td class="datetime-cell">
+                            <span class="date-label">{{ i.apply_date }}</span>
+                            <span class="time-label">{{ i.apply_time }}</span>
+                        </td>
+                        <td>
+                            {% if i.status == "pending" %}
+                                <span class="status-badge status-pending">Pending</span>
+                            {% elif i.status == "applied" %}
+                                <span class="status-badge status-pending">Applied</span>
+                            {% elif i.status == "shortlisted" %}
+                                <span class="status-badge status-approved">Shortlisted</span>
+                            {% elif i.status == "rejected" %}
+                                <span class="status-badge status-rejected">Rejected</span>
+                            {% elif i.status == "selected" or i.status == "Finalised" %}
+                                <span class="status-badge status-selected">Selected</span>
+                            {% elif i.status == "updated" or "scheduled" in i.status|lower %}
+                                <span class="status-badge status-interview">Scheduled for Interview</span>
+                            {% elif i.status == "examattended" %}
+                                <span class="status-badge status-interview">Exam Attended</span>
+                            {% else %}
+                                <span class="status-badge status-pending">{{ i.status|title }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if i.exam_date != "pending" %}
+                                <span class="date-label">📅 {{ i.exam_date }}</span>
+                                <span class="time-label">⏰ {{ i.exam_ftime }}-{{ i.exam_ttime }}</span>
+                            {% else %}
+                                <span style="color: rgba(255,255,255,0.5); font-style: italic;">Not Scheduled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {# Show bot interview info first if present #}
+
+
+                            {% if i.binterview_date != "pending" %}
+                                <span class="date-label">📅 {{ i.binterview_date }}</span>
+                                <br>
+                                <span class="time-label">⏰ {{ i.binterview_time }}</span>
+                                <br>
+                                {% if i.can_start %}
+                                    <a href="/mockinterview/{{ i.id }}">Start</a>
+                                {% endif %}
+                            {% endif %}
+
+                            {# Interview info and conditional Start link: only when interview date is today and time matches current time (HH:MM) #}
+
+                        </td>
+
+                        <td>
+                            {% if i.interview_date != "pending" %}
+                                <span class="date-label">📅 {{ i.interview_date }}</span>
+                                <span class="time-label">⏰ {{ i.interview_time }}</span>
+
+                                {% if i.can_start %}
+                                    <a href="{{ i.link }}">Start</a>
+                                {% endif %}
+
+                                {# Debug helpers: show raw stored values for troubleshooting #}
+                                <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);margin-top:6px;">
+                                    <span>date: {{ i.interview_date }}</span>
+                                    <span style="margin-left:8px;">time: {{ i.interview_time }}</span>
+                                    <span style="margin-left:8px;">can_start: {{ i.can_start }}</span>
+                                </div>
+                            {% else %}
+                                <span style="color: rgba(255,255,255,0.5); font-style: italic;">Not Scheduled</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--primary);">₹{{ i.VACANCY.salary }}</div>
+                            <div style="font-size: 0.85rem; color: rgba(255,255,255,0.6);">{{ i.VACANCY.fulltime_parttime }}</div>
+                        </td>
+                        <td>
+                            <div class="action-btns">
+                                {% now "Y-m-d" as today %}
+                                {% if i.status == "shortlisted" and i.exam_date != "pending" %}
+                                    <!-- Attend Exam Button - enabled only during time window -->
+                                    <button type="button" class="action-btn attend-exam" data-exam-date="{{ i.exam_date }}" data-exam-time="{{ i.exam_ftime }}-{{ i.exam_ttime }}" data-exam-id="{{ i.id }}" id="attend-btn-{{ i.id }}" disabled>
+                                        <i class="fas fa-video"></i> Start Exam
+                                    </button>
+{#                                    <div class="action-btn view" style="display: none; justify-content: center; gap: 5px;" id="exam-unavail-{{ i.id }}">#}
+{#                                        <i class="fas fa-clock"></i>#}
+{#                                        <span style="font-size: 0.8rem;">{{ i.exam_ftime }}-{{ i.exam_ttime }}</span>#}
+{#                                    </div>#}
+                                {% else %}
+
+                                    ------
+
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h3>No Applications Yet</h3>
+            <p>You haven't applied for any jobs yet. Start your job search and apply for positions that match your skills and interests.</p>
+            <a href="/view_college" class="apply-btn">
+                <i class="fas fa-search"></i>
+                Browse Jobs
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Footer -->
+        <footer class="page-footer">
+            <p>© 2024 InterviewSimulator. Track your career journey with precision.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Interactive Features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Status badge animation
+            const statusBadges = document.querySelectorAll('.status-badge');
+            statusBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px) scale(1.05)';
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+                });
+
+                badge.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+
+            // Table row click handler
+            const tableRows = document.querySelectorAll('.application-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    tableRows.forEach(r => r.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+
+            // Action buttons functionality
+            const viewButtons = document.querySelectorAll('.action-btn.view');
+            viewButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const row = this.closest('tr');
+                    const jobType = row.cells[3].textContent;
+                    const status = row.cells[2].querySelector('.status-badge').textContent;
+                    const date = row.cells[1].querySelector('.date-label').textContent;
+
+                    alert(`Application Details:\n\nJob Type: ${jobType}\nStatus: ${status}\nApplied On: ${date}`);
+                });
+            });
+
+            const deleteButtons = document.querySelectorAll('.action-btn.delete');
+            deleteButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const row = this.closest('tr');
+                    const jobType = row.cells[3].textContent;
+
+                    if (confirm(`Are you sure you want to withdraw your application for "${jobType}"?`)) {
+                        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        this.disabled = true;
+
+                        // Simulate API call
+                        setTimeout(() => {
+                            row.style.opacity = '0.5';
+                            row.style.textDecoration = 'line-through';
+                            btn.innerHTML = '<i class="fas fa-check"></i>';
+                            setTimeout(() => {
+                                row.remove();
+                            }, 1000);
+                        }, 1500);
+                    }
+                });
+            });
+
+            // Pagination buttons
+            const pageButtons = document.querySelectorAll('.page-btn');
+            pageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    pageButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Animate stats counters
+            function animateCounter(element, target) {
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current);
+                    }
+                }, 30);
+            }
+
+            // Start animation when page loads
+            setTimeout(() => {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    const target = parseInt(stat.textContent);
+                    if (!isNaN(target)) {
+                        animateCounter(stat, target);
+                    }
+                });
+            }, 500);
+
+            // Add floating animation to table rows on load
+            tableRows.forEach((row, index) => {
+                row.style.animation = `slideUp 0.5s ease ${index * 0.1}s forwards`;
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+            });
+
+            // Add CSS for slideUp animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Exam time window checker - enable Start Exam button only within 5 min window
+            function checkExamTimeWindow() {
+                const attendBtns = document.querySelectorAll('.attend-exam');
+                const now = new Date();
+
+                attendBtns.forEach(btn => {
+                    const examTimeStr = btn.getAttribute('data-exam-time');
+                    const examDateStr = btn.getAttribute('data-exam-date');
+                    const examId = btn.getAttribute('data-exam-id');
+
+                    if (!examTimeStr || examTimeStr === 'pending' || examTimeStr === '' || !examDateStr || examDateStr === 'pending') {
+                        btn.style.display = 'none';
+                        return;
+                    }
+
+                    try {
+                        // Parse exam date
+                        const dateParts = examDateStr.split('-');
+                        const examYear = parseInt(dateParts[0]);
+                        const examMonth = parseInt(dateParts[1]) - 1; // JS months are 0-based
+                        const examDay = parseInt(dateParts[2]);
+
+                        // Parse exam time - handle formats like "10:00", "10:00-11:00", "10:00:00", etc
+                        let startTimeStr = examTimeStr.trim();
+
+                        // If it's a time range like "10:00-11:00", take the start time
+                        if (startTimeStr.includes('-')) {
+                            startTimeStr = startTimeStr.split('-')[0].trim();
+                        }
+
+                        const timeParts = startTimeStr.split(':');
+                        let examHour = parseInt(timeParts[0]);
+                        let examMin = parseInt(timeParts[1]) || 0;
+
+                        // Validate parsed values
+                        if (isNaN(examYear) || isNaN(examMonth) || isNaN(examDay) || isNaN(examHour) || isNaN(examMin) || examHour < 0 || examHour > 23 || examMin < 0 || examMin > 59) {
+                            console.error('Invalid exam date/time format:', examDateStr, examTimeStr);
+                            btn.style.display = 'none';
+                            return;
+                        }
+
+                        // Create exam time
+                        const examTime = new Date(examYear, examMonth, examDay, examHour, examMin, 0, 0);
+
+                        // Calculate time window: exam_time to exam_time + 5 minutes
+                        const windowStart = new Date(examTime);
+                        const windowEnd = new Date(examTime);
+                        windowEnd.setMinutes(windowEnd.getMinutes() + 5);
+
+                        const unavailSpan = btn.closest('.action-btns').querySelector('[id^="exam-unavail-"]');
+
+                        // Debug logging
+                        const nowStr = now.toLocaleTimeString();
+                        const startStr = windowStart.toLocaleTimeString();
+                        const endStr = windowEnd.toLocaleTimeString();
+                        console.log(`Checking exam ${examId}: Now=${nowStr}, Start=${startStr}, End=${endStr}, InWindow=${now >= windowStart && now <= windowEnd}`);
+
+                        // Check if current time is within window
+                        if (now >= windowStart && now <= windowEnd) {
+                            // Within time window - enable button
+                            btn.style.display = 'inline-flex';
+                            btn.disabled = false;
+                            btn.classList.add('enabled');
+                            btn.classList.remove('disabled-state');
+                            btn.title = 'Click to start exam now!';
+                            console.log(`✅ Exam ${examId} button ENABLED - within time window`);
+                            if (unavailSpan) unavailSpan.style.display = 'none';
+                        } else {
+                            // Outside time window - disable button
+                            btn.style.display = 'inline-flex';
+                            btn.disabled = true;
+                            btn.classList.remove('enabled');
+                            btn.classList.add('disabled-state');
+
+                            // Calculate time until exam
+                            const timeUntil = examTime - now;
+                            if (timeUntil > 0) {
+                                const minutes = Math.floor(timeUntil / 60000);
+                                const seconds = Math.floor((timeUntil % 60000) / 1000);
+                                btn.title = `Exam starts in ${minutes}m ${seconds}s`;
+                                console.log(`⏳ Exam ${examId} button DISABLED - starts in ${minutes}m ${seconds}s`);
+                            } else {
+                                btn.title = 'Exam time window has closed';
+                                console.log(`❌ Exam ${examId} button DISABLED - window closed`);
+                            }
+
+                            if (unavailSpan) {
+                                unavailSpan.style.display = 'inline-flex';
+                                unavailSpan.title = btn.title;
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error checking exam time:', e);
+                        btn.style.display = 'none';
+                    }
+                });
+            }
+
+            // Handle attend exam button click
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.attend-exam') && !e.target.closest('.attend-exam').disabled) {
+                    const btn = e.target.closest('.attend-exam');
+                    const examId = btn.getAttribute('data-exam-id');
+                    window.location.href = `/view_sample_question/${examId}#abc`;
+                }
+            });
+
+            // Check exam time window on page load and every 5 seconds for real-time update
+            checkExamTimeWindow();
+            setInterval(checkExamTimeWindow, 5000);
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

@@ -1,0 +1,616 @@
+
+{% extends "candidate/index.html" %}
+
+{% block body %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Submit Suggestions</title>
+   <style>
+    :root {
+        --primary: #10b981;
+        --primary-dark: #059669;
+        --primary-light: rgba(16, 185, 129, 0.1);
+        --secondary: #059669;
+        --accent: #34d399;
+        --dark: #111827;
+        --light: #ffffff;
+        --gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        --shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+        --glow: 0 0 20px rgba(16, 185, 129, 0.3);
+        --radius: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: #f9fafb;
+        color: #111827;
+        background-image:
+            radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 40%);
+    }
+
+    /* Floating Background Elements */
+    .floating-bg {
+        position: fixed;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .floating-bg:nth-child(1) {
+        top: 10%;
+        right: 5%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.3;
+        animation: float 20s infinite linear;
+    }
+
+    .floating-bg:nth-child(2) {
+        bottom: 20%;
+        left: 5%;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.2;
+        animation: float 25s infinite linear reverse;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        25% { transform: translate(50px, 50px) rotate(90deg) scale(1.1); }
+        50% { transform: translate(0, 100px) rotate(180deg) scale(1); }
+        75% { transform: translate(-50px, 50px) rotate(270deg) scale(0.9); }
+        100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+    }
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .header-card {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 30px;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow);
+        animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .header-card h1 {
+        font-size: 2.2rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-card h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+        box-shadow: var(--glow);
+    }
+
+    .header-card p {
+        color: #6b7280;
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-top: 15px;
+    }
+
+    .complaint-form {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-group {
+        margin-bottom: 30px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-label::before {
+        content: '📝';
+        font-size: 1.2rem;
+    }
+
+    .form-control {
+        width: 100%;
+        background: white;
+        border: 2px solid #d1fae5;
+        border-radius: 12px;
+        padding: 18px 20px;
+        color: #111827;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        resize: vertical;
+        min-height: 160px;
+        line-height: 1.6;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background: white;
+    }
+
+    .form-control::placeholder {
+        color: #9ca3af;
+    }
+
+    .char-counter {
+        text-align: right;
+        margin-top: 8px;
+        font-size: 0.85rem;
+        color: #6b7280;
+    }
+
+    .char-counter.warning {
+        color: #d97706;
+    }
+
+    .char-counter.error {
+        color: #dc2626;
+    }
+
+    .submit-btn {
+        display: block;
+        width: 100%;
+        background: var(--gradient);
+        border: none;
+        border-radius: 12px;
+        padding: 18px;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 30px;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+        border-color: rgba(16, 185, 129, 0.5);
+    }
+
+    .submit-btn:hover::before {
+        left: 100%;
+    }
+
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+        background: #9ca3af;
+    }
+
+    /* Info Box */
+    .info-box {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid #d1fae5;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 25px;
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        animation: slideUp 0.5s ease-out 0.4s both;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .info-icon {
+        font-size: 1.5rem;
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    .info-content h4 {
+        color: var(--primary-dark);
+        margin-bottom: 8px;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-content p {
+        color: #6b7280;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .info-content ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 10px 0;
+    }
+
+    .info-content li {
+        margin-bottom: 5px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .info-content li::before {
+        content: '•';
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    /* Success Message */
+    .success-message {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid #a7f3d0;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        margin-top: 20px;
+        animation: slideIn 0.5s ease-out;
+        display: none;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .success-icon {
+        font-size: 3rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        animation: bounce 1s ease infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .success-message h3 {
+        color: var(--primary-dark);
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+    }
+
+    .success-message p {
+        color: #4b5563;
+        font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+
+        .header-card,
+        .complaint-form {
+            padding: 25px;
+        }
+
+        .header-card h1 {
+            font-size: 1.8rem;
+        }
+
+        .form-control {
+            padding: 15px;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            padding: 15px;
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .header-card,
+        .complaint-form {
+            padding: 20px;
+        }
+
+        .header-card h1 {
+            font-size: 1.6rem;
+        }
+
+        .form-label {
+            font-size: 1rem;
+        }
+
+        .info-box {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+
+    /* Focus States */
+    textarea:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* Loading Animation */
+    .btn-loader {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-loader span {
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Transition Effects */
+    .form-control,
+    .submit-btn,
+    .info-box,
+    .success-message {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Hover Effects */
+    .form-group:hover .form-label {
+        color: var(--primary);
+        transform: translateX(5px);
+    }
+
+    .form-group:hover .form-control {
+        border-color: var(--primary);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+    }
+</style>
+</head>
+
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+
+    <div class="container">
+        <!-- Header Card -->
+        <div class="header-card">
+            <h1>Submit Suggestions</h1>
+            <p>We value your feedback. Please describe your issue in detail and we'll address it promptly.</p>
+        </div>
+
+        <!-- Complaint Form -->
+        <form action="/send_complaint_post" method="post" enctype="multipart/form-data" name="form1" id="form1" class="complaint-form">
+            <div class="form-group">
+                <label for="textarea" class="form-label">Suggestions Details</label>
+                <textarea
+                    name="textarea"
+                    id="textarea"
+                    class="form-control"
+                    placeholder="Please provide detailed information about your Suggestions..."
+                    oninput="updateCharCount(this)"
+                    maxlength="1000"
+                    required></textarea>
+                <div id="charCount" class="char-counter">0/1000 characters</div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Submit Suggestions</span>
+                <span id="btnLoader" style="display: none;">⏳ Processing...</span>
+            </button>
+
+            <!-- Info Box -->
+
+
+            <!-- Success Message (Hidden by default) -->
+            <div id="successMessage" class="success-message">
+                <div class="success-icon">✅</div>
+                <h3>Suggestions Submitted Successfully!</h3>
+                <p>Thank you for your feedback. We've received your Suggestions and will review it shortly.</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('form1');
+            const textarea = document.getElementById('textarea');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const successMessage = document.getElementById('successMessage');
+            const charCount = document.getElementById('charCount');
+
+            // Character counter update
+            function updateCharCount(element) {
+                const currentLength = element.value.length;
+                const maxLength = element.getAttribute('maxlength');
+                charCount.textContent = `${currentLength}/${maxLength} characters`;
+
+                // Update color based on length
+                if (currentLength > maxLength * 0.9) {
+                    charCount.classList.add('error');
+                    charCount.classList.remove('warning');
+                } else if (currentLength > maxLength * 0.75) {
+                    charCount.classList.add('warning');
+                    charCount.classList.remove('error');
+                } else {
+                    charCount.classList.remove('warning', 'error');
+                }
+            }
+
+            // Initialize character counter
+            updateCharCount(textarea);
+
+            // Form submission handling
+            form.addEventListener('submit', function(e) {
+                if (textarea.value.trim().length < 10) {
+                    e.preventDefault();
+                    alert('Please provide more details (at least 10 characters)');
+                    textarea.focus();
+                    return;
+                }
+
+                if (textarea.value.trim().length > 1000) {
+                    e.preventDefault();
+                    alert('Please keep your Suggestions under 1000 characters');
+                    textarea.focus();
+                    return;
+                }
+
+                // Show loading state
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline';
+                submitBtn.disabled = true;
+
+                // In a real application, this would be handled by the server response
+                // For demo purposes, we'll show success message after 2 seconds
+                setTimeout(function() {
+                    successMessage.style.display = 'block';
+                    form.reset();
+                    updateCharCount(textarea);
+
+                    // Reset button state
+                    btnText.style.display = 'inline';
+                    btnLoader.style.display = 'none';
+                    submitBtn.disabled = false;
+                }, 2000);
+            });
+
+            // Add animation to form elements
+            const formElements = [textarea, submitBtn];
+            formElements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Add focus effect to textarea
+            textarea.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            textarea.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+
+            // Add click animation to submit button
+            submitBtn.addEventListener('mousedown', function() {
+                this.style.transform = 'scale(0.98)';
+            });
+
+            submitBtn.addEventListener('mouseup', function() {
+                this.style.transform = 'translateY(-3px)';
+            });
+
+            submitBtn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

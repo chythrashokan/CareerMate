@@ -1,0 +1,34 @@
+{% extends 'base_theme.html' %}
+
+{% block title %}My Profile - CareerMate{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <img src="{{ user_obj.image }}" alt="Profile Image" class="rounded-circle" style="width:120px;height:120px;object-fit:cover;"/>
+                        <div>
+                            <h3 class="mb-0">{{ user_obj.name }}</h3>
+                            <p class="text-muted mb-0">{{ user_obj.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 mb-3"><strong>Phone</strong><div>{{ user_obj.phone }}</div></div>
+                        <div class="col-sm-6 mb-3"><strong>Experience</strong><div>{{ user_obj.experience }} years</div></div>
+                        <div class="col-sm-6 mb-3"><strong>Place</strong><div>{{ user_obj.place }}</div></div>
+                        <div class="col-sm-6 mb-3"><strong>Pin</strong><div>{{ user_obj.pin }}</div></div>
+                        <div class="col-12 mb-3"><strong>Post</strong><div>{{ user_obj.post }}</div></div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <a href="/edit_profile" class="btn btn-primary">Edit Profile</a>
+                        <a href="/student_home" class="btn btn-outline-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

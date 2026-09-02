@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Mail Settings | CareerMatch</title>
+  <meta name="description" content="Configure email settings for sending notifications to candidates">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header p {
+      color: #a0aec0;
+      font-size: 1.1em;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 0.95em;
+      color: #e2e8f0;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 0.95em;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.3);
+      border-color: #667eea;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+    }
+
+    .form-group input::placeholder {
+      color: #718096;
+    }
+
+    .info-box {
+      background: rgba(102, 126, 234, 0.1);
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .info-box i {
+      color: #667eea;
+      font-size: 1.2em;
+      flex-shrink: 0;
+    }
+
+    .info-box p {
+      color: #cbd5e0;
+      font-size: 0.9em;
+      margin: 0;
+    }
+
+    .toggle-group {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #cbd5e0;
+      transition: 0.4s;
+      border-radius: 28px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #667eea;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    .form-section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .form-section:last-child {
+      border-bottom: none;
+    }
+
+    .section-title {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title i {
+      color: #667eea;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-test {
+      background: rgba(72, 187, 120, 0.2);
+      color: #48bb78;
+      border: 1px solid rgba(72, 187, 120, 0.3);
+    }
+
+    .btn-test:hover {
+      background: rgba(72, 187, 120, 0.3);
+      border-color: rgba(72, 187, 120, 0.5);
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .alert-success {
+      background: rgba(72, 187, 120, 0.2);
+      border: 1px solid rgba(72, 187, 120, 0.5);
+      color: #68d391;
+    }
+
+    .alert-error {
+      background: rgba(245, 101, 101, 0.2);
+      border: 1px solid rgba(245, 101, 101, 0.5);
+      color: #f56565;
+    }
+
+    .alert-info {
+      background: rgba(102, 126, 234, 0.2);
+      border: 1px solid rgba(102, 126, 234, 0.5);
+      color: #63b3ed;
+    }
+
+    .alert i {
+      font-size: 1.2em;
+      flex-shrink: 0;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .back-link:hover {
+      gap: 12px;
+      color: #764ba2;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .header h1 {
+        font-size: 1.8em;
+      }
+
+      .card {
+        padding: 20px;
+      }
+    }
+
+    .help-text {
+      font-size: 0.85em;
+      color: #a0aec0;
+      margin-top: 5px;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      font-size: 0.85em;
+    }
+
+    .status-indicator.active {
+      color: #48bb78;
+    }
+
+    .status-indicator.inactive {
+      color: #f56565;
+    }
+
+    .status-indicator.active::before {
+      content: "●";
+      font-size: 1.2em;
+    }
+
+    .status-indicator.inactive::before {
+      content: "●";
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <a href="/home" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Dashboard
+    </a>
+
+    <div class="header">
+      <h1><i class="fas fa-envelope"></i> Mail Settings</h1>
+      <p>Configure SMTP settings to send emails to selected candidates</p>
+    </div>
+
+    <div class="card">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="info-box">
+        <i class="fas fa-lightbulb"></i>
+        <p>
+          <strong>Tip:</strong> For Gmail, use an <strong>App Password</strong> instead of your regular password. 
+          <a href="https://support.google.com/accounts/answer/185833" target="_blank" style="color: #667eea;">Learn how to create one</a>
+        </p>
+      </div>
+
+      <form method="POST" action="{% url 'save_mail_settings' %}" id="mailSettingsForm">
+        {% csrf_token %}
+
+        <!-- SMTP Server Configuration -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="fas fa-server"></i>
+            SMTP Server Configuration
+          </div>
+
+          <div class="two-column">
+            <div class="form-group">
+              <label for="smtp_server">SMTP Server Address</label>
+              <input type="text" id="smtp_server" name="smtp_server" 
+                     value="{{ settings.smtp_server|default:'smtp.gmail.com' }}" 
+                     placeholder="e.g., smtp.gmail.com" required>
+              <div class="help-text">Enter your email provider's SMTP server address</div>
+            </div>
+
+            <div class="form-group">
+              <label for="smtp_port">SMTP Port</label>
+              <input type="number" id="smtp_port" name="smtp_port" 
+                     value="{{ settings.smtp_port|default:'587' }}" 
+                     min="1" max="65535" required>
+              <div class="help-text">Common ports: 587 (TLS), 465 (SSL), 25 (SMTP)</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="toggle-group">
+              <label style="margin: 0;">
+                <span>Use TLS Encryption</span>
+              </label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="use_tls" name="use_tls" 
+                       {% if settings.use_tls %}checked{% endif %}>
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="help-text">Recommended: Keep TLS enabled for secure connections</div>
+          </div>
+        </div>
+
+        <!-- Email Credentials -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="fas fa-lock"></i>
+            Email Credentials
+          </div>
+
+          <div class="form-group">
+            <label for="smtp_email">Sender Email Address</label>
+            <input type="email" id="smtp_email" name="smtp_email" 
+                   value="{{ settings.smtp_email|default:'' }}" 
+                   placeholder="your-email@gmail.com" required>
+            <div class="help-text">The email address that will be used to send emails</div>
+          </div>
+
+          <div class="form-group">
+            <label for="smtp_password">Email Password / App Password</label>
+            <input type="password" id="smtp_password" name="smtp_password" 
+                   placeholder="Enter your password or app-specific password" 
+                   {% if not settings.smtp_password %}required{% endif %}>
+            <div class="help-text">
+              <i class="fas fa-shield-alt"></i>
+              Your password is encrypted and stored securely. Leave blank to keep existing password.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="smtp_password_confirm">Confirm Password</label>
+            <input type="password" id="smtp_password_confirm" name="smtp_password_confirm" 
+                   placeholder="Confirm your password" 
+                   {% if not settings.smtp_password %}required{% endif %}>
+            <div class="help-text">Re-enter your password for confirmation</div>
+          </div>
+        </div>
+
+        <!-- Activation Status -->
+        <div class="form-section">
+          <div class="section-title">
+            <i class="fas fa-power-off"></i>
+            Status
+          </div>
+
+          <div class="toggle-group">
+            <label style="margin: 0;">
+              <span>Enable Mail Configuration</span>
+            </label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="is_active" name="is_active" 
+                     {% if settings.is_active %}checked{% endif %}>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="help-text">Enable this configuration to start sending emails through this account</div>
+
+          {% if settings.is_active %}
+            <div style="margin-top: 15px;">
+              <span class="status-indicator active">
+                Currently Active
+              </span>
+            </div>
+          {% else %}
+            <div style="margin-top: 15px;">
+              <span class="status-indicator inactive">
+                Currently Inactive
+              </span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-group">
+          <button type="button" class="btn btn-test" onclick="testConnection()">
+            <i class="fas fa-network-wired"></i>
+            Test Connection
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i>
+            Save Settings
+          </button>
+          <a href="/home" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Email Templates Info -->
+    <div class="card" style="margin-top: 30px;">
+      <div class="section-title">
+        <i class="fas fa-envelope-open"></i>
+        Email Templates
+      </div>
+      <p style="color: #cbd5e0; margin-bottom: 15px;">
+        Emails will be sent to candidates for the following events:
+      </p>
+      <ul style="list-style: none; color: #a0aec0;">
+        <li style="margin-bottom: 10px;">
+          <i class="fas fa-check-circle" style="color: #48bb78; margin-right: 10px;"></i>
+          <strong>Selection Notification</strong> - When a candidate is selected
+        </li>
+        <li style="margin-bottom: 10px;">
+          <i class="fas fa-check-circle" style="color: #48bb78; margin-right: 10px;"></i>
+          <strong>Rejection Notification</strong> - When a candidate is rejected
+        </li>
+        <li style="margin-bottom: 10px;">
+          <i class="fas fa-check-circle" style="color: #48bb78; margin-right: 10px;"></i>
+          <strong>Interview Scheduled</strong> - When an interview is scheduled
+        </li>
+        <li>
+          <i class="fas fa-check-circle" style="color: #48bb78; margin-right: 10px;"></i>
+          <strong>Test Scheduled</strong> - When a test is scheduled
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    function testConnection() {
+      const smtp_server = document.getElementById('smtp_server').value;
+      const smtp_port = document.getElementById('smtp_port').value;
+      const smtp_email = document.getElementById('smtp_email').value;
+      const smtp_password = document.getElementById('smtp_password').value;
+      const use_tls = document.getElementById('use_tls').checked;
+
+      if (!smtp_email || !smtp_password) {
+        alert('Please enter both email and password to test the connection.');
+        return;
+      }
+
+      const btn = event.target;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+
+      // Send test request via AJAX
+      fetch('{% url "test_mail_connection" %}', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+          smtp_server: smtp_server,
+          smtp_port: smtp_port,
+          smtp_email: smtp_email,
+          smtp_password: smtp_password,
+          use_tls: use_tls
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('✓ Connection successful! Your mail configuration is working properly.');
+        } else {
+          alert('✗ Connection failed: ' + data.message);
+        }
+      })
+      .catch(error => {
+        alert('Error: ' + error.message);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-network-wired"></i> Test Connection';
+      });
+    }
+
+    // Form validation
+    document.getElementById('mailSettingsForm').addEventListener('submit', function(e) {
+      const password = document.getElementById('smtp_password').value;
+      const passwordConfirm = document.getElementById('smtp_password_confirm').value;
+
+      if (password && password !== passwordConfirm) {
+        e.preventDefault();
+        alert('Passwords do not match!');
+        return false;
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,643 @@
+{% extends "company/index.html" %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Interview | InterviewSimulator</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+  <style>
+:root {
+    --primary-color: #16A34A;
+    --secondary-color: #15803D;
+    --accent-color: #22C55E;
+    --dark-color: #064E3B;
+    --light-color: #FFFFFF;
+    --success-color: #16A34A;
+    --warning-color: #FACC15;
+    --danger-color: #DC2626;
+    --gradient-primary: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+    --gradient-success: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+    --glass-bg: rgba(22, 163, 74, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: var(--dark-color);
+    min-height: 100vh;
+    padding: 20px;
+    background-image:
+        radial-gradient(circle at 20% 80%, rgba(34,197,94,0.12) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(22,163,74,0.1) 0%, transparent 50%);
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Card */
+.header-card {
+    background: var(--gradient-primary);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 30px rgba(22,163,74,0.25);
+}
+
+.header-icon {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: white;
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+
+.header-subtitle {
+    color: rgba(255,255,255,0.9);
+}
+
+.candidate-info {
+    background: rgba(255,255,255,0.15);
+    border-left: 4px solid white;
+    color: white;
+}
+
+/* Form Container */
+.form-container {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid #BBF7D0;
+    box-shadow: 0 10px 25px rgba(22,163,74,0.15);
+}
+
+/* Labels */
+.form-label {
+    color: var(--dark-color);
+}
+
+.form-label i {
+    color: var(--primary-color);
+}
+
+/* Inputs */
+.form-control {
+    background: #ffffff;
+    border: 2px solid #BBF7D0;
+    color: var(--dark-color);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+}
+
+/* Submit Button */
+.submit-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+}
+
+.submit-btn:hover {
+    box-shadow: 0 10px 25px rgba(22,163,74,0.4);
+}
+
+/* Back Button */
+.back-btn {
+    background: #F0FDF4;
+    border: 2px solid #BBF7D0;
+    color: var(--dark-color);
+}
+
+.back-btn:hover {
+    background: #DCFCE7;
+    border-color: var(--primary-color);
+}
+
+/* Info Box */
+.info-box {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: var(--dark-color);
+}
+
+.info-box i {
+    color: var(--primary-color);
+}
+
+/* URL Preview */
+.url-preview {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    color: var(--secondary-color);
+}
+
+.url-preview a {
+    color: var(--primary-color);
+}
+
+/* Error */
+.error-message {
+    color: #DC2626;
+}
+
+.form-control.error {
+    border-color: #DC2626;
+    background: #FEF2F2;
+}
+
+/* Tooltip */
+.tooltip .tooltiptext {
+    background-color: var(--dark-color);
+    border: 1px solid #BBF7D0;
+}
+
+/* Floating Elements */
+.floating-element {
+    background: linear-gradient(135deg, rgba(34,197,94,0.25), rgba(22,163,74,0.15));
+    opacity: 0.2;
+}
+</style>
+
+</head>
+<body>
+    <!-- Floating Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    
+    <div class="container">
+        <!-- Back Button -->
+        <!-- Header -->
+        <div class="header-card">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h1 class="header-title">Schedule Interview</h1>
+                <p class="header-subtitle">Set up a virtual interview with the candidate</p>
+                
+                <!-- Candidate Info -->
+                <div class="candidate-info">
+                    <p><strong>Candidate ID:</strong> {{ id }}</p>
+                    <p><small>Interview must be scheduled for a future date</small></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Container -->
+        <div class="form-container">
+            <form id="scheduleInterviewForm" method="post" action="/schedule_interview_post/{{ id }}">
+                {% csrf_token %}
+                
+                <!-- Interview Date -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-calendar-day"></i>
+                        Interview Date
+                        <span class="tooltip">
+                            <i class="fas fa-question-circle" style="color: rgba(255,255,255,0.5); font-size: 12px;"></i>
+                            <span class="tooltiptext">Select a future date for the interview. Past dates are not allowed.</span>
+                        </span>
+                    </label>
+                    <input type="date" 
+                           name="textfield" 
+                           id="interviewDate"
+                           class="form-control"
+                           required
+                           onchange="validateDate()">
+                    <div class="error-message" id="dateError">Please select a future date (minimum tomorrow)</div>
+                </div>
+                
+                <!-- Interview Time -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-clock"></i>
+                        Interview Time
+                        <span class="tooltip">
+                            <i class="fas fa-question-circle" style="color: rgba(255,255,255,0.5); font-size: 12px;"></i>
+                            <span class="tooltiptext">Select time between 9:00 AM and 6:00 PM (business hours)</span>
+                        </span>
+                    </label>
+                    <input type="time" 
+                           name="textfield2" 
+                           id="interviewTime"
+                           class="form-control"
+                           required
+                           onchange="validateTime()">
+                    <div class="error-message" id="timeError">Please select a valid time (9:00 AM - 6:00 PM)</div>
+                </div>
+                
+                <!-- Interview Link -->
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-link"></i>
+                        Meeting Link
+                        <span class="tooltip">
+                            <i class="fas fa-question-circle" style="color: rgba(255,255,255,0.5); font-size: 12px;"></i>
+                            <span class="tooltiptext">Enter the full meeting URL (Zoom, Google Meet, Microsoft Teams, etc.)</span>
+                        </span>
+                    </label>
+                    <input type="text" 
+                           name="textfield3" 
+                           id="interviewLink"
+                           class="form-control"
+                           placeholder="https://meet.google.com/xxx-yyyy-zzz"
+                           required
+                           oninput="validateLink()">
+                    <div class="error-message" id="linkError">Please enter a valid URL starting with http:// or https://</div>
+                    
+                    <!-- URL Preview -->
+                    <div class="url-preview" id="urlPreview">
+                        Preview: <a href="#" target="_blank" id="previewLink"></a>
+                    </div>
+                </div>
+                
+                <!-- Info Box -->
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Important:</strong> 
+                    <ul>
+                        <li>Interview must be scheduled at least 24 hours in advance</li>
+                        <li>Meeting link will be sent to the candidate via email</li>
+                        <li>Ensure the meeting link is valid and accessible</li>
+                    </ul>
+                </div>
+                <br>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-success" id="submitBtn" disabled>
+                    <i class="fas fa-calendar-check"></i>
+                    Schedule Interview
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Set minimum date to tomorrow
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            // Format date as YYYY-MM-DD
+            const formattedDate = tomorrow.toISOString().split('T')[0];
+            
+            // Set minimum date for date input
+            const interviewDateInput = document.getElementById('interviewDate');
+            interviewDateInput.min = formattedDate;
+            
+            // Focus on date input
+            interviewDateInput.focus();
+            
+            // Calculate and display tomorrow's date as suggested
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const tomorrowFormatted = tomorrow.toLocaleDateString('en-US', options);
+            
+            // Add placeholder text with suggestion
+            interviewDateInput.title = `Earliest available date: ${tomorrowFormatted}`;
+            
+            // Set default time to 10:00 AM tomorrow
+            const defaultTime = '10:00';
+            document.getElementById('interviewTime').value = defaultTime;
+            
+            // Set default meeting link examples
+            const linkInput = document.getElementById('interviewLink');
+            linkInput.title = 'Examples:\nhttps://meet.google.com/xxx-yyyy-zzz\nhttps://zoom.us/j/123456789\nhttps://teams.microsoft.com/l/meetup-join/...';
+            
+            // Initialize validation
+            validateForm();
+        });
+        
+        // Validate date
+        function validateDate() {
+            const interviewDateInput = document.getElementById('interviewDate');
+            const dateError = document.getElementById('dateError');
+            const selectedDate = new Date(interviewDateInput.value);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (interviewDateInput.value === '') {
+                showError(dateError, 'Please select a date');
+                interviewDateInput.classList.add('error');
+                return false;
+            }
+            
+            if (selectedDate <= today) {
+                showError(dateError, 'Please select a future date (minimum tomorrow)');
+                interviewDateInput.classList.add('error');
+                return false;
+            }
+            
+            // Check if date is within reasonable range (next 3 months)
+            const threeMonthsFromNow = new Date();
+            threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
+            
+            if (selectedDate > threeMonthsFromNow) {
+                showError(dateError, 'Please select a date within the next 3 months');
+                interviewDateInput.classList.add('error');
+                return false;
+            }
+            
+            hideError(dateError);
+            interviewDateInput.classList.remove('error');
+            return true;
+        }
+        
+        // Validate time
+        function validateTime() {
+            const interviewTimeInput = document.getElementById('interviewTime');
+            const timeError = document.getElementById('timeError');
+            
+            if (interviewTimeInput.value === '') {
+                showError(timeError, 'Please select a time');
+                interviewTimeInput.classList.add('error');
+                return false;
+            }
+            
+            // Validate time format
+            const timePattern = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+            if (!timePattern.test(interviewTimeInput.value)) {
+                showError(timeError, 'Please enter a valid time (HH:MM)');
+                interviewTimeInput.classList.add('error');
+                return false;
+            }
+            
+            // Check if time is within business hours (9 AM to 6 PM)
+            const selectedTime = interviewTimeInput.value.split(':');
+            const selectedHours = parseInt(selectedTime[0]);
+            const selectedMinutes = parseInt(selectedTime[1]);
+            
+            if (selectedHours < 9 || selectedHours > 18 || 
+                (selectedHours === 18 && selectedMinutes > 0)) {
+                showError(timeError, 'Please select time between 9:00 AM and 6:00 PM');
+                interviewTimeInput.classList.add('error');
+                return false;
+            }
+            
+            hideError(timeError);
+            interviewTimeInput.classList.remove('error');
+            return true;
+        }
+        
+        // Validate link
+        function validateLink() {
+            const linkInput = document.getElementById('interviewLink');
+            const linkError = document.getElementById('linkError');
+            const urlPreview = document.getElementById('urlPreview');
+            const previewLink = document.getElementById('previewLink');
+            const linkValue = linkInput.value.trim();
+            
+            if (linkValue === '') {
+                showError(linkError, 'Please enter a meeting link');
+                linkInput.classList.add('error');
+                urlPreview.classList.remove('active');
+                return false;
+            }
+            
+            // Basic URL validation
+            const urlPattern = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?$/i;
+            
+            if (!urlPattern.test(linkValue)) {
+                showError(linkError, 'Please enter a valid URL');
+                linkInput.classList.add('error');
+                urlPreview.classList.remove('active');
+                return false;
+            }
+            
+            // Ensure URL starts with http:// or https://
+            let validUrl = linkValue;
+            if (!linkValue.startsWith('http://') && !linkValue.startsWith('https://')) {
+                validUrl = 'https://' + linkValue;
+            }
+            
+            // Update preview
+            previewLink.href = validUrl;
+            previewLink.textContent = validUrl.length > 50 ? validUrl.substring(0, 50) + '...' : validUrl;
+            urlPreview.classList.add('active');
+            
+            hideError(linkError);
+            linkInput.classList.remove('error');
+            return true;
+        }
+        
+        // Validate entire form
+        function validateForm() {
+            const isDateValid = validateDate();
+            const isTimeValid = validateTime();
+            const isLinkValid = validateLink();
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (isDateValid && isTimeValid && isLinkValid) {
+                submitBtn.disabled = false;
+                return true;
+            } else {
+                submitBtn.disabled = true;
+                return false;
+            }
+        }
+        
+        // Show error message
+        function showError(errorElement, message) {
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Hide error message
+        function hideError(errorElement) {
+            errorElement.style.display = 'none';
+        }
+        
+        // Add event listeners for real-time validation
+        document.getElementById('interviewDate').addEventListener('change', validateForm);
+        document.getElementById('interviewTime').addEventListener('change', validateForm);
+        document.getElementById('interviewLink').addEventListener('input', validateForm);
+        document.getElementById('interviewDate').addEventListener('input', validateForm);
+        document.getElementById('interviewTime').addEventListener('input', validateForm);
+        
+        // Form submission handler
+        document.getElementById('scheduleInterviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                showNotification('Please fix the errors in the form.', 'error');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Scheduling...';
+            submitBtn.disabled = true;
+            
+            // Format date for display
+            const interviewDate = document.getElementById('interviewDate').value;
+            const interviewTime = document.getElementById('interviewTime').value;
+            const meetingLink = document.getElementById('interviewLink').value;
+            
+            const formattedDate = new Date(interviewDate).toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Show confirmation
+            const confirmationMessage = `
+Schedule interview for:
+Date: ${formattedDate}
+Time: ${interviewTime}
+Meeting Link: ${meetingLink.length > 30 ? meetingLink.substring(0, 30) + '...' : meetingLink}
+
+An email will be sent to the candidate with these details.
+
+Are you sure you want to schedule this interview?
+            `;
+            
+            if (confirm(confirmationMessage)) {
+                // Submit form after short delay
+                setTimeout(() => {
+                    this.submit();
+                }, 1000);
+            } else {
+                // Restore button if cancelled
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            // Add styles
+            let bgColor, borderColor;
+            switch(type) {
+                case 'error':
+                    bgColor = 'rgba(80, 80, 80, 0.9)';
+                    borderColor = 'rgba(120, 120, 120, 0.3)';
+                    break;
+                default:
+                    bgColor = 'rgba(100, 100, 100, 0.9)';
+                    borderColor = 'rgba(150, 150, 150, 0.3)';
+            }
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: #FFFFFF;
+                padding: 15px 25px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 1000;
+                backdrop-filter: blur(10px);
+                animation: slideIn 0.3s ease;
+                border: 1px solid ${borderColor};
+            `;
+            
+            // Add keyframe animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+            
+            document.body.appendChild(notification);
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter to submit
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('submitBtn').click();
+            }
+            
+            // Escape to go back
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                window.history.back();
+            }
+        });
+        
+        // Auto-validate on page load
+        window.onload = function() {
+            validateForm();
+        };
+        
+        // Auto-generate sample meeting links on focus
+        document.getElementById('interviewLink').addEventListener('focus', function() {
+            if (this.value === '') {
+                // Add placeholder examples
+                const examples = [
+                    'https://meet.google.com/new',
+                    'https://zoom.us/j/',
+                    'https://teams.microsoft.com/l/meetup-join/'
+                ];
+                this.placeholder = examples[Math.floor(Math.random() * examples.length)];
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

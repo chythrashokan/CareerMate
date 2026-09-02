@@ -1,0 +1,632 @@
+
+
+{% extends "candidate/index.html" %}
+
+{% block body %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Application Status</title>
+   <style>
+    :root {
+        --primary: #10b981;
+        --primary-dark: #059669;
+        --primary-light: rgba(16, 185, 129, 0.1);
+        --secondary: #dc2626;
+        --accent: #34d399;
+        --dark: #111827;
+        --light: #ffffff;
+        --gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        --gradient-dark: linear-gradient(135deg, #111827 0%, #374151 100%);
+        --shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+        --glow: 0 0 20px rgba(16, 185, 129, 0.3);
+        --radius: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: #f9fafb;
+        color: #111827;
+        min-height: 100vh;
+        background-image:
+            radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(52, 211, 153, 0.05) 0%, transparent 40%);
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+    }
+
+    /* Header Styles */
+    .page-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .page-header h1 {
+        font-size: 2.8rem;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 800;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+    }
+
+    .page-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 2px;
+        box-shadow: var(--glow);
+    }
+
+    .page-subtitle {
+        font-size: 1.2rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-weight: 300;
+    }
+
+    /* Table Container */
+    .table-container {
+        background: white;
+        border-radius: var(--radius);
+        border: 1px solid #d1fae5;
+        padding: 30px;
+        margin-bottom: 40px;
+        overflow-x: auto;
+        box-shadow: var(--shadow);
+    }
+
+    /* Enhanced Table Styles */
+    .application-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .application-table thead {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(52, 211, 153, 0.1) 100%);
+    }
+
+    .application-table th {
+        padding: 20px;
+        text-align: left;
+        color: var(--primary-dark);
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #e5e7eb;
+        position: relative;
+    }
+
+    .application-table th::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--gradient);
+    }
+
+    .application-table td {
+        padding: 20px;
+        color: #374151;
+        border-bottom: 1px solid #f3f4f6;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        vertical-align: middle;
+    }
+
+    .application-table tbody tr {
+        background: white;
+        transition: all 0.3s ease;
+    }
+
+    .application-table tbody tr:hover {
+        background: rgba(16, 185, 129, 0.05);
+        transform: scale(1.01);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .application-table tbody tr:hover td {
+        color: #111827;
+    }
+
+    .application-table tbody tr:nth-child(even) {
+        background: #f9fafb;
+    }
+
+    .application-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Enhanced Button Styles */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1.5px solid;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn-danger {
+        background: rgba(220, 38, 38, 0.1);
+        border-color: rgba(220, 38, 38, 0.5);
+        color: var(--secondary);
+    }
+
+    .btn-danger:hover {
+        background: rgba(220, 38, 38, 0.2);
+        box-shadow: 0 5px 20px rgba(220, 38, 38, 0.3);
+        transform: translateY(-2px);
+        border-color: rgba(220, 38, 38, 0.8);
+    }
+
+    .btn-primary {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.5);
+        color: var(--primary);
+    }
+
+    .btn-primary:hover {
+        background: rgba(16, 185, 129, 0.2);
+        box-shadow: 0 5px 20px rgba(16, 185, 129, 0.3);
+        transform: translateY(-2px);
+        border-color: rgba(16, 185, 129, 0.8);
+    }
+
+    /* Job Type Badge */
+    .job-type-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid #d1fae5;
+        color: var(--primary-dark);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Salary Display */
+    .salary-display {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+
+    .salary-currency {
+        font-size: 0.8rem;
+        color: #6b7280;
+        margin-left: 2px;
+    }
+
+    /* College Info Styling */
+    .college-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .college-name {
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .college-contact {
+        font-size: 0.85rem;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .contact-icon {
+        color: var(--primary);
+        font-size: 0.9rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 40px;
+        background: white;
+        border-radius: var(--radius);
+        border: 2px dashed #d1fae5;
+        margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-state-icon {
+        font-size: 80px;
+        color: #d1fae5;
+        margin-bottom: 20px;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .empty-state h3 {
+        font-size: 2rem;
+        color: #111827;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: #6b7280;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin: 0 auto 30px;
+        line-height: 1.6;
+    }
+
+    /* Floating Background Elements */
+    .floating-bg {
+        position: fixed;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .floating-bg:nth-child(1) {
+        top: 10%;
+        right: 5%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.3;
+        animation: float 20s infinite linear;
+    }
+
+    .floating-bg:nth-child(2) {
+        bottom: 20%;
+        left: 5%;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+        filter: blur(60px);
+        opacity: 0.2;
+        animation: float 25s infinite linear reverse;
+    }
+
+    @keyframes float {
+        0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+        25% { transform: translate(50px, 50px) rotate(90deg) scale(1.1); }
+            50% { transform: translate(0, 100px) rotate(180deg) scale(1); }
+            75% { transform: translate(-50px, 50px) rotate(270deg) scale(0.9); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+    }
+
+    /* Serial Number Styling */
+    .sl-no {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-align: center;
+    }
+
+    /* Map Link Enhancement */
+    .map-link {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .map-link::after {
+        content: '📍';
+        position: absolute;
+        right: 10px;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .map-link:hover::after {
+        opacity: 1;
+        transform: translateX(-5px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+        }
+
+        .table-container {
+            padding: 15px;
+        }
+
+        .application-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .application-table th,
+        .application-table td {
+            padding: 12px 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .job-type-badge {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+        }
+
+        .salary-display {
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Footer */
+    .page-footer {
+        text-align: center;
+        margin-top: 50px;
+        padding-top: 30px;
+        border-top: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    /* Row Count Animation */
+    @keyframes rowAppear {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .application-table tbody tr {
+        animation: rowAppear 0.5s ease forwards;
+        animation-delay: calc(var(--row-index) * 0.1s);
+    }
+
+    /* Ripple Effect */
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(16, 185, 129, 0.3);
+        transform: scale(0);
+        animation: ripple-animation 0.6s linear;
+        pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    /* Scrollbar Styling */
+    .table-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .table-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        border-radius: 4px;
+    }
+
+    .table-container::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    }
+
+    /* Selection Styling */
+    ::selection {
+        background: rgba(16, 185, 129, 0.2);
+        color: #111827;
+    }
+</style>
+
+
+</head>
+
+<body>
+    <!-- Floating Background Elements -->
+    <div class="floating-bg"></div>
+    <div class="floating-bg"></div>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>My Applications</h1>
+            <p class="page-subtitle">Track all your job applications and their current status in one place</p>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+            <form id="form1" name="form1" method="post" action="">
+                <table class="application-table" border="0">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Job Type</th>
+                            <th scope="col">Salary</th>
+                            <th scope="col">Company Details</th>
+                            <th scope="col">Location</th>
+{#                            <th scope="col">Actions</th>#}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in data %}
+                        <tr style="--row-index: {{ forloop.counter0 }}">
+                            <td class="sl-no">{{ forloop.counter }}</td>
+                            <td>
+                                <span class="job-type-badge">{{ i.VACANCY.job_type }}</span>
+                            </td>
+                            <td>
+                                <span class="salary-display">
+                                    {{ i.VACANCY.salary }}
+{#                                    <span class="salary-currency">/month</span>#}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="college-info">
+                                    <span class="college-name">{{ i.VACANCY.COMPANY.company_name }}</span>
+                                    <div class="college-contact">
+                                        <span class="contact-icon">📧</span>
+                                        {{ i.VACANCY.COMPANY.email }}
+                                    </div>
+                                    <div class="college-contact">
+                                        <span class="contact-icon">📞</span>
+                                        {{ i.VACANCY.COMPANY.phone }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="https://www.google.com/maps/?q={{ i.VACANCY.COMPANY.lattitude }},{{ i.VACANCY.COMPANY.longitude }}"
+                                   class="btn btn-primary map-link"
+                                   target="_blank">
+                                    View Location
+                                </a>
+                            </td>
+{#                            <td>#}
+{#                                <a href="/send_rating_review/{{ i.VACANCY.COMPANY.id }}#aaa"#}
+{#                                   class="btn btn-danger">#}
+{#                                    Rate & Review#}
+{#                                </a>#}
+{#                            </td>#}
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📄</div>
+                                    <h3>No Applications Yet</h3>
+                                    <p>You haven't applied to any jobs yet. Start applying to see your applications here!</p>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <!-- Page Footer -->
+        <div class="page-footer">
+            <p>© 2024 Job Portal. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.4);">
+                Total Applications: {{ data|length }}
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add hover effects to table rows
+        document.addEventListener('DOMContentLoaded', function() {
+            const rows = document.querySelectorAll('.application-table tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.01)';
+                    this.style.zIndex = '10';
+                });
+
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.zIndex = '1';
+                });
+            });
+
+            // Add click effects to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+
+                    this.appendChild(ripple);
+
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

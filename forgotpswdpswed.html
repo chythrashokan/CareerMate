@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Reset Password | Career Mate</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+       :root {
+    /* Base */
+    --white: #ffffff;
+    --black: #166534; /* deep green */
+
+    /* Soft green backgrounds */
+    --gray-50: #f0fdf4;
+    --gray-100: #ecfdf3;
+    --gray-200: #d1fae5;
+    --gray-300: #bbf7d0;
+
+    /* Text */
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #052e16;
+
+    /* Status colors */
+    --success: #22c55e;
+    --error: #ef4444;
+    --warning: #f59e0b;
+
+    /* Primary green */
+    --accent: #16a34a;
+}
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--white);
+            color: var(--gray-900);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Geometric Background Pattern */
+        .geometric-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: var(--white);
+            background-image: 
+                linear-gradient(45deg, var(--gray-100) 1px, transparent 1px),
+                linear-gradient(-45deg, var(--gray-100) 1px, transparent 1px);
+            background-size: 60px 60px;
+            background-position: center center;
+            opacity: 0.3;
+        }
+
+        /* Main Container */
+        .reset-wrapper {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--black);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: rotate(8deg) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: var(--white);
+        }
+
+        .logo-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtext {
+            font-size: 12px;
+            color: var(--gray-500);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* Reset Card */
+        .reset-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reset-card:hover {
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.12);
+            border-color: var(--gray-300);
+        }
+
+        .reset-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--black);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s ease;
+        }
+
+        .reset-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        /* Header */
+        .reset-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .reset-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .reset-icon i {
+            font-size: 32px;
+            color: var(--black);
+            transition: all 0.3s ease;
+        }
+
+        .reset-header:hover .reset-icon {
+            background: var(--black);
+            transform: rotate(5deg);
+        }
+
+        .reset-header:hover .reset-icon i {
+            color: var(--white);
+        }
+
+        .reset-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: 12px;
+        }
+
+        .reset-header p {
+            color: var(--gray-600);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 20px 18px 56px;
+            background: var(--white);
+            border: 2px solid var(--gray-300);
+            border-radius: 14px;
+            color: var(--gray-900);
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--black);
+            background: var(--white);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-input:focus + .input-icon {
+            color: var(--black);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .form-input.valid {
+            border-color: var(--success);
+            background: rgba(34, 197, 94, 0.02);
+        }
+
+        .form-input.invalid {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.02);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .password-toggle:hover {
+            color: var(--black);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Password Strength */
+        .password-strength {
+            margin-top: 16px;
+        }
+
+        .strength-meter {
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .strength-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .strength-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .strength-label {
+            font-weight: 600;
+        }
+
+        /* Password Requirements */
+        .requirements-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        .requirements-card.show {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 300px;
+            margin-top: 16px;
+        }
+
+        .requirements-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .requirements-title i {
+            font-size: 12px;
+        }
+
+        .requirements-list {
+            list-style: none;
+        }
+
+        .requirement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--gray-600);
+            padding: 6px 0;
+        }
+
+        .requirement-item i {
+            font-size: 12px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .requirement-item.valid {
+            color: var(--gray-800);
+        }
+
+        .requirement-item.valid i {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .requirement-item.invalid i {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        /* Error Messages */
+        .error-message {
+            color: var(--error);
+            font-size: 13px;
+            margin-top: 8px;
+            padding-left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 14px;
+            padding: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .success-message i {
+            color: var(--success);
+            font-size: 20px;
+        }
+
+        .success-message span {
+            color: var(--gray-800);
+            font-weight: 500;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            width: 100%;
+            padding: 20px;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .reset-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .reset-button:hover::before {
+            left: 100%;
+        }
+
+        .reset-button:disabled {
+            background: var(--gray-400);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .reset-button:disabled:hover::before {
+            left: -100%;
+        }
+
+        .reset-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .reset-button:hover i {
+            transform: translateX(3px);
+        }
+
+        /* Back Link */
+        .back-link {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .back-link a {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 10px;
+        }
+
+        .back-link a:hover {
+            color: var(--black);
+            background: var(--gray-100);
+            transform: translateX(-3px);
+        }
+
+        .back-link a i {
+            transition: transform 0.3s ease;
+        }
+
+        .back-link a:hover i {
+            transform: translateX(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 576px) {
+            .reset-card {
+                padding: 32px 24px;
+                border-radius: 20px;
+            }
+
+            .reset-header h1 {
+                font-size: 28px;
+            }
+
+            .logo-icon {
+                width: 56px;
+                height: 56px;
+            }
+
+            .form-input {
+                padding: 16px 16px 16px 48px;
+                font-size: 15px;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Geometric Background -->
+    <div class="geometric-bg"></div>
+
+    <!-- Main Content -->
+    <div class="reset-wrapper">
+        <!-- Logo -->
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <div class="logo-text">Career Mate</div>
+            <div class="logo-subtext">AI SIMULATOR</div>
+        </div>
+
+        <!-- Reset Card -->
+        <div class="reset-card">
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <span>Password reset successful! Redirecting to login...</span>
+            </div>
+
+            <!-- Header -->
+            <div class="reset-header">
+                <div class="reset-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h1>Reset Password</h1>
+                <p>Enter your new password to secure your account</p>
+            </div>
+
+            <!-- Reset Form -->
+            <form id="resetForm" action="/forgotpswdpswedbuttonclick" method="post">
+                {% csrf_token %}
+
+                <!-- New Password -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="password" 
+                               name="password" 
+                               id="password" 
+                               class="form-input"
+                               placeholder="New Password" 
+                               required
+                               autocomplete="new-password">
+                        <span class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <button type="button" class="password-toggle" data-target="password">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="passwordError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Password must be at least 8 characters with uppercase, lowercase, and number</span>
+                    </div>
+
+                    <!-- Password Strength -->
+                    <div class="password-strength">
+                        <div class="strength-meter">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-info">
+                            <span class="strength-label" id="strengthLabel">Password Strength</span>
+                            <span id="strengthScore">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Password Requirements -->
+                    <div class="requirements-card" id="requirementsCard">
+                        <div class="requirements-title">
+                            <i class="fas fa-shield-alt"></i>
+                            Password Requirements
+                        </div>
+                        <ul class="requirements-list">
+                            <li class="requirement-item" id="reqLength">
+                                <i class="fas fa-times-circle"></i>
+                                At least 8 characters
+                            </li>
+                            <li class="requirement-item" id="reqLowercase">
+                                <i class="fas fa-times-circle"></i>
+                                One lowercase letter
+                            </li>
+                            <li class="requirement-item" id="reqUppercase">
+                                <i class="fas fa-times-circle"></i>
+                                One uppercase letter
+                            </li>
+                            <li class="requirement-item" id="reqNumber">
+                                <i class="fas fa-times-circle"></i>
+                                One number
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <div class="input-wrapper">
+                        <input type="password" 
+                               name="confirmpassword" 
+                               id="confirmpassword" 
+                               class="form-input"
+                               placeholder="Confirm Password" 
+                               required
+                               autocomplete="new-password">
+                        <span class="input-icon">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <button type="button" class="password-toggle" data-target="confirmpassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="error-message" id="confirmPasswordError">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Passwords do not match</span>
+                    </div>
+                </div>
+
+                <!-- Reset Button -->
+                <button type="submit" class="reset-button" id="resetBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Reset Password
+                </button>
+            </form>
+
+            <!-- Back Link -->
+            <div class="back-link">
+                <a href="/login">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('resetForm');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmpassword');
+        const resetBtn = document.getElementById('resetBtn');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Error Messages
+        const passwordError = document.getElementById('passwordError');
+        const confirmPasswordError = document.getElementById('confirmPasswordError');
+        
+        // Password Strength Elements
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthLabel = document.getElementById('strengthLabel');
+        const strengthScore = document.getElementById('strengthScore');
+        const requirementsCard = document.getElementById('requirementsCard');
+        
+        // Requirement Items
+        const reqLength = document.getElementById('reqLength');
+        const reqLowercase = document.getElementById('reqLowercase');
+        const reqUppercase = document.getElementById('reqUppercase');
+        const reqNumber = document.getElementById('reqNumber');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePasswordStrength('');
+            updateRequirements('');
+            
+            // Add ripple effect to reset button
+            resetBtn.addEventListener('click', function(e) {
+                createRipple(e);
+            });
+        });
+
+        // Toggle Password Visibility
+        document.querySelectorAll('.password-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.className = 'far fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    icon.className = 'far fa-eye';
+                }
+                
+                // Add animation
+                this.style.transform = 'translateY(-50%) scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-50%) scale(1)';
+                }, 150);
+            });
+        });
+
+        // Check Password Strength
+        function updatePasswordStrength(password) {
+            let score = 0;
+            const length = password.length;
+            
+            // Length score
+            if (length >= 8) score += 25;
+            if (length >= 12) score += 10;
+            if (length >= 16) score += 15;
+            
+            // Character variety score
+            if (/[a-z]/.test(password)) score += 20;
+            if (/[A-Z]/.test(password)) score += 20;
+            if (/\d/.test(password)) score += 20;
+            if (/[^A-Za-z0-9]/.test(password)) score += 25;
+            
+            // Cap at 100
+            score = Math.min(score, 100);
+            
+            // Update UI
+            strengthFill.style.width = `${score}%`;
+            strengthScore.textContent = `${score}%`;
+            
+            // Update colors and labels
+            if (score < 30) {
+                strengthFill.style.background = 'var(--error)';
+                strengthLabel.textContent = 'Weak';
+                strengthLabel.style.color = 'var(--error)';
+            } else if (score < 60) {
+                strengthFill.style.background = 'var(--warning)';
+                strengthLabel.textContent = 'Fair';
+                strengthLabel.style.color = 'var(--warning)';
+            } else if (score < 90) {
+                strengthFill.style.background = 'var(--accent)';
+                strengthLabel.textContent = 'Good';
+                strengthLabel.style.color = 'var(--accent)';
+            } else {
+                strengthFill.style.background = 'var(--success)';
+                strengthLabel.textContent = 'Strong';
+                strengthLabel.style.color = 'var(--success)';
+            }
+        }
+
+        // Update Requirements
+        function updateRequirements(password) {
+            const hasLength = password.length >= 8;
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            
+            // Show/hide requirements card
+            if (password.length > 0) {
+                requirementsCard.classList.add('show');
+            } else {
+                requirementsCard.classList.remove('show');
+            }
+            
+            // Update requirement items
+            updateRequirementItem(reqLength, hasLength, 'length');
+            updateRequirementItem(reqLowercase, hasLowercase, 'lowercase');
+            updateRequirementItem(reqUppercase, hasUppercase, 'uppercase');
+            updateRequirementItem(reqNumber, hasNumber, 'number');
+            
+            return hasLength && hasLowercase && hasUppercase && hasNumber;
+        }
+
+        function updateRequirementItem(element, isValid, type) {
+            if (isValid) {
+                element.classList.add('valid');
+                element.classList.remove('invalid');
+                element.querySelector('i').className = 'fas fa-check-circle';
+                
+                // Add subtle animation
+                element.style.transform = 'translateX(5px)';
+                setTimeout(() => {
+                    element.style.transform = 'translateX(0)';
+                }, 200);
+            } else {
+                element.classList.add('invalid');
+                element.classList.remove('valid');
+                element.querySelector('i').className = 'fas fa-times-circle';
+            }
+        }
+
+        // Real-time Validation
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            
+            // Update strength and requirements
+            updatePasswordStrength(password);
+            const isValid = updateRequirements(password);
+            
+            // Update input styling
+            if (password.length === 0) {
+                this.classList.remove('valid', 'invalid');
+                passwordError.classList.remove('show');
+            } else if (isValid) {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+                passwordError.classList.remove('show');
+            } else {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+                passwordError.classList.add('show');
+            }
+            
+            // Check confirmation match
+            if (confirmPasswordInput.value) {
+                validatePasswordMatch();
+            }
+        });
+
+        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+        function validatePasswordMatch() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (confirmPassword.length === 0) {
+                confirmPasswordInput.classList.remove('valid', 'invalid');
+                confirmPasswordError.classList.remove('show');
+                return;
+            }
+            
+            if (password === confirmPassword) {
+                confirmPasswordInput.classList.add('valid');
+                confirmPasswordInput.classList.remove('invalid');
+                confirmPasswordError.classList.remove('show');
+            } else {
+                confirmPasswordInput.classList.add('invalid');
+                confirmPasswordInput.classList.remove('valid');
+                confirmPasswordError.classList.add('show');
+            }
+        }
+
+        // Form Validation
+        function validateForm() {
+            let isValid = true;
+            
+            // Validate password
+            if (!passwordInput.value.trim()) {
+                passwordError.textContent = 'Please enter a new password';
+                passwordError.classList.add('show');
+                passwordInput.classList.add('invalid');
+                isValid = false;
+            } else if (!updateRequirements(passwordInput.value)) {
+                passwordError.textContent = 'Password does not meet all requirements';
+                passwordError.classList.add('show');
+                passwordInput.classList.add('invalid');
+                isValid = false;
+            }
+            
+            // Validate confirmation
+            if (!confirmPasswordInput.value.trim()) {
+                confirmPasswordError.textContent = 'Please confirm your password';
+                confirmPasswordError.classList.add('show');
+                confirmPasswordInput.classList.add('invalid');
+                isValid = false;
+            } else if (passwordInput.value !== confirmPasswordInput.value) {
+                confirmPasswordError.textContent = 'Passwords do not match';
+                confirmPasswordError.classList.add('show');
+                confirmPasswordInput.classList.add('invalid');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Form Submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Show loading state
+                resetBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> Resetting...';
+                resetBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show success message
+                    successMessage.classList.add('show');
+                    
+                    // Update button
+                    resetBtn.innerHTML = '<i class="fas fa-check"></i> Password Reset!';
+                    resetBtn.style.background = 'var(--success)';
+                    
+                    // Submit form after delay
+                    setTimeout(() => {
+                        form.submit();
+                    }, 2000);
+                }, 1500);
+            }
+        });
+
+        // Ripple Effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement("span");
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add("ripple");
+
+            const ripple = button.getElementsByClassName("ripple")[0];
+            if (ripple) {
+                ripple.remove();
+            }
+
+            button.appendChild(circle);
+        }
+
+        // Add ripple styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(0);
+                animation: ripple-animation 0.6s linear;
+            }
+
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

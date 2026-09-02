@@ -1,0 +1,310 @@
+{% extends "company/index.html" %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview Generated Questions | InterviewSimulator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+:root {
+    --primary: #16A34A;
+    --secondary: #15803D;
+    --accent: #22C55E;
+    --dark: #064E3B;
+    --light: #F0FDF4;
+    --gradient: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: var(--dark);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Header */
+.preview-header {
+    background: var(--gradient);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.preview-header h1 {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.preview-stats {
+    display: flex;
+    gap: 30px;
+}
+
+/* Question Card */
+.question-card {
+    background: #ffffff;
+    border: 1px solid #BBF7D0;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.question-card:hover {
+    background: var(--light);
+    border-color: var(--primary);
+    transform: translateX(5px);
+}
+
+.question-number {
+    background: var(--primary);
+    color: white;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.question-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+}
+
+/* Options */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 15px 0 0 50px;
+}
+
+.option {
+    background: #ffffff;
+    border: 1px solid #DCFCE7;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.option:hover {
+    background: var(--light);
+    border-color: var(--accent);
+}
+
+.option-letter {
+    background: var(--primary);
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.option-text {
+    font-size: 0.9rem;
+    color: var(--dark);
+}
+
+.option.correct {
+    background: #DCFCE7;
+    border-color: var(--primary);
+}
+
+.correct-badge {
+    background: var(--primary);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+/* Buttons */
+.btn-save {
+    background: var(--gradient);
+    color: white;
+}
+
+.btn-cancel {
+    background: #ffffff;
+    color: var(--dark);
+    border: 1px solid #BBF7D0;
+}
+
+.btn-cancel:hover {
+    background: var(--light);
+}
+
+/* Selection Info */
+.selection-info {
+    background: var(--light);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 15px;
+    color: var(--secondary);
+}
+</style>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="preview-header">
+            <h1>
+                <i class="fas fa-eye"></i>
+                Preview Generated Questions
+            </h1>
+            <div class="preview-stats">
+                <div class="stat">
+                    <div class="stat-number">{{ count }}</div>
+                    <div class="stat-label">Questions Generated</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">{{ topic }}</div>
+                    <div class="stat-label">Topic</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selection Info -->
+        <div class="selection-info">
+            <i class="fas fa-info-circle"></i>
+            <span>Select the questions you want to save. Only checked questions will be added to your interview.</span>
+        </div>
+
+        <!-- Select All -->
+        <div class="select-all">
+            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll(this)">
+            <label for="selectAllCheckbox" style="cursor: pointer; flex: 1;">Select All Questions</label>
+        </div>
+
+        <!-- Form to Save Selected -->
+        <form id="saveQuestionsForm" method="POST" action="/save_selected_questions/{{ id }}">
+            {% csrf_token %}
+
+            <!-- Questions Container -->
+            <div class="questions-container">
+                {% for question in questions %}
+                <div class="question-card">
+                    <div class="question-header">
+                        <input type="checkbox" name="selected_questions" value="{{ forloop.counter0 }}" class="question-checkbox">
+                        <div class="question-number">{{ forloop.counter }}</div>
+                        <div class="question-text">{{ question.question }}</div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="options-grid">
+                        <div class="option {% if question.answer == 'A' %}correct{% endif %}">
+                            <div class="option-letter">A</div>
+                            <div class="option-text">{{ question.option1 }}</div>
+                            {% if question.answer == 'A' %}<span class="correct-badge">Correct</span>{% endif %}
+                        </div>
+                        <div class="option {% if question.answer == 'B' %}correct{% endif %}">
+                            <div class="option-letter">B</div>
+                            <div class="option-text">{{ question.option2 }}</div>
+                            {% if question.answer == 'B' %}<span class="correct-badge">Correct</span>{% endif %}
+                        </div>
+                        <div class="option {% if question.answer == 'C' %}correct{% endif %}">
+                            <div class="option-letter">C</div>
+                            <div class="option-text">{{ question.option3 }}</div>
+                            {% if question.answer == 'C' %}<span class="correct-badge">Correct</span>{% endif %}
+                        </div>
+                        <div class="option {% if question.answer == 'D' %}correct{% endif %}">
+                            <div class="option-letter">D</div>
+                            <div class="option-text">{{ question.option4 }}</div>
+                            {% if question.answer == 'D' %}<span class="correct-badge">Correct</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="button" class="btn btn-cancel" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                    Go Back
+                </button>
+                <button type="submit" class="btn btn-save" onclick="validateSelection(event)">
+                    <i class="fas fa-save"></i>
+                    Save Selected Questions
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Toggle Select All
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+            checkboxes.forEach(cb => cb.checked = checkbox.checked);
+        }
+
+        // Validate before save
+        function validateSelection(event) {
+            const selected = document.querySelectorAll('.question-checkbox:checked').length;
+            if (selected === 0) {
+                event.preventDefault();
+                alert('Please select at least one question to save.');
+                return false;
+            }
+            // Show confirmation
+            if (confirm(`Save ${selected} selected question(s)?`)) {
+                document.getElementById('saveQuestionsForm').submit();
+            }
+            return false;
+        }
+
+        // Go back
+        function goBack() {
+            if (confirm('Discard all changes and go back?')) {
+                window.location = '/add_question/{{ id }}#abc';
+            }
+        }
+
+        // Mark selected questions on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.question-checkbox');
+            // Check first 3 by default or all if less than 3
+            const defaultCount = Math.min(3, checkboxes.length);
+            for (let i = 0; i < defaultCount; i++) {
+                checkboxes[i].checked = true;
+            }
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

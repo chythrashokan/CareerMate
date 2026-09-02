@@ -1,0 +1,120 @@
+
+{% extends "company/index.html" %}
+{% block body %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Add Vacancy</title>
+     <style>
+
+
+    table {
+      width: 50%;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 15px;
+      background-color:  #2ae149;
+      color: white;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px 15px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    input[type="submit"] {
+      background-color: black;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+      .table-container {
+            padding: 30px;
+            margin: 30px auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+{#    .form-container {#}
+{#      width: 100%;#}
+{#      max-width: 600px;#}
+{#      margin: 0 auto;#}
+{#      padding: 20px;#}
+{#      background-color: #fff;#}
+{#      border-radius: 8px;#}
+{#      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);#}
+{#    }#}
+  </style>
+</head>
+
+<body>
+ <div class="container table-container">
+    <h1>Add Vacancy</h1>
+<form action="/add_vacancy_post/{{ id }}" method="post">
+<table>
+  <tr>
+    <th scope="row">Number of Slots</th>
+    <td>
+      <input type="number" name="textfield" id="textfield"  class="form-control" required/></td>
+  </tr>
+  <tr>
+    <th scope="row">Last Date</th>
+    <td>
+      <input type="date" name="textfield2" id="textfield2" class="form-control"  required/></td>
+  </tr>
+    <tr>
+        <td>Experience category</td>
+        <td>
+            <select name="select" class="form-control">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+            </select>
+        </td>
+    </tr>
+  <tr>
+    <th scope="row">Details</th>
+    <td>
+      <textarea name="textarea" id="textarea" cols="45" rows="5" class="form-control" required></textarea></td>
+  </tr>
+  <tr>
+    <td colspan="2" scope="row">
+        <div align="center"> <input type="submit" name="button" id="button" value="Add" /></div></td>
+    </tr>
+</table>
+
+</form>
+</body>
+</html>
+{% endblock %}

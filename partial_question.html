@@ -1,0 +1,227 @@
+<!-- templates/candidate/partial_question.html -->
+{% if is_ajax %}
+<!-- Progress Header -->
+<div class="progress-header">
+    <div class="progress-content">
+        <div class="progress-info">
+            <div class="progress-label">
+                <i class="fas fa-list-ol"></i>
+                Question Progress
+            </div>
+            <div class="progress-value" id="progressValue">
+                <span id="currentQuestion">{{ c }}</span> <span>/ {{ request.session.tq }}</span>
+            </div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: {% widthratio c request.session.tq 100 %}%"></div>
+            </div>
+            <div class="progress-text">
+                <span>Question <span id="currentQuestionText">{{ c }}</span></span>
+                <span>{{ request.session.tq }} Questions Total</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Question Card -->
+<div class="question-card" id="questionCard">
+    <div class="question-header">
+        <div class="question-icon">
+            <i class="fas fa-question-circle"></i>
+        </div>
+        <div class="question-title">
+            Multiple Choice Question
+        </div>
+    </div>
+    
+    <div class="question-text" id="questionText">
+        {{ data.questions }}
+    </div>
+
+    <form id="questionForm" name="form1" method="post" action="/handle_post/{{ data.id }}" data-question-id="{{ data.id }}">
+        {% csrf_token %}
+        <input type="hidden" name="index" value="{{ data.questions }}" />
+        <input type="hidden" name="question_index" id="questionIndex" value="{{ c }}" />
+        <input type="hidden" name="total_questions" id="totalQuestions" value="{{ request.session.tq }}" />
+        <input type="hidden" name="selected_answer" id="selected_answer" value="{{ data.correct_answer }}" />
+        
+        <div class="options-container" id="optionsContainer">
+            <div class="option-item">
+                <input class="option-input" type="radio" name="answer" value="{{ data.option_1 }}" id="option1_{{ data.id }}" required />
+                <label class="option-label" for="option1_{{ data.id }}">
+                    <span class="option-letter">A</span>
+                    <span class="option-text">{{ data.option_1 }}</span>
+                </label>
+            </div>
+            
+            <div class="option-item">
+                <input class="option-input" type="radio" name="answer" value="{{ data.option_2 }}" id="option2_{{ data.id }}" required />
+                <label class="option-label" for="option2_{{ data.id }}">
+                    <span class="option-letter">B</span>
+                    <span class="option-text">{{ data.option_2 }}</span>
+                </label>
+            </div>
+            
+            <div class="option-item">
+                <input class="option-input" type="radio" name="answer" value="{{ data.option_3 }}" id="option3_{{ data.id }}" required />
+                <label class="option-label" for="option3_{{ data.id }}">
+                    <span class="option-letter">C</span>
+                    <span class="option-text">{{ data.option_3 }}</span>
+                </label>
+            </div>
+            
+            <div class="option-item">
+                <input class="option-input" type="radio" name="answer" value="{{ data.option_4 }}" id="option4_{{ data.id }}" required />
+                <label class="option-label" for="option4_{{ data.id }}">
+                    <span class="option-letter">D</span>
+                    <span class="option-text">{{ data.option_4 }}</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                <i class="fas fa-paper-plane"></i>
+                Submit Answer
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Update the progress bar immediately when partial loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentCount = parseInt('{{ c }}');
+        const totalQuestions = parseInt('{{ request.session.tq }}');
+        const percentage = (currentCount / totalQuestions) * 100;
+        const progressFill = document.getElementById('progressFill');
+        if (progressFill) {
+            progressFill.style.width = `${percentage}%`;
+        }
+    });
+</script>
+<script>
+    // Proctoring: capture webcam frames and send to backend for multi-person/face checks
+    (function(){
+        const candidateId = '{{ candidate_id }}';
+        if (!candidateId) return;
+
+        let stream = null;
+        let captureInterval = null;
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+                // hidden video element to capture frames
+                let video = document.createElement('video');
+                video.style.display = 'none';
+                video.autoplay = true;
+                video.playsInline = true;
+                document.body.appendChild(video);
+                video.srcObject = stream;
+
+                // Wait until video has enough data
+                await new Promise((resolve) => {
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        resolve();
+                    };
+                });
+
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth || 640;
+                canvas.height = video.videoHeight || 480;
+                const ctx = canvas.getContext('2d');
+
+                // Capture every 5 seconds
+                captureInterval = setInterval(async () => {
+                    try {
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+                        // POST to proctoring endpoint
+                        const res = await fetch('/api/check_proctoring/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ image_data: dataUrl, candidate_id: candidateId })
+                        });
+                        const json = await res.json();
+
+                        // Handle responses
+                        if (!json.success) {
+                            if (json.exam_blocked) {
+                                alert(json.message || 'Exam blocked by proctoring.');
+                                window.location = json.redirect || '/view_applied_exam';
+                                stopCamera();
+                            } else if (json.face_mismatch) {
+                                // show a temporary warning
+                                showProctorWarning('Face mismatch detected. Please align your face with the camera.');
+                            } else if (json.violations && json.violations.length) {
+                                // if multiple_faces violation detected, show warning
+                                const multi = json.violations.find(v => v.type === 'multiple_faces');
+                                if (multi) {
+                                    showProctorWarning('Multiple faces detected. Please ensure only you are visible.');
+                                }
+                            }
+                        }
+
+                    } catch (e) {
+                        console.error('Proctoring capture error', e);
+                    }
+                }, 5000);
+
+            } catch (err) {
+                console.warn('Unable to access camera for proctoring:', err);
+            }
+        }
+
+        function stopCamera(){
+            if (captureInterval) {
+                clearInterval(captureInterval);
+                captureInterval = null;
+            }
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+        }
+
+        // Small overlay for warnings
+        function showProctorWarning(msg){
+            let el = document.getElementById('proctor-warning');
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'proctor-warning';
+                Object.assign(el.style, {
+                    position: 'fixed',
+                    right: '20px',
+                    top: '80px',
+                    background: 'rgba(255,200,0,0.95)',
+                    color: '#111',
+                    padding: '10px 14px',
+                    borderRadius: '6px',
+                    zIndex: 9999,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                });
+                document.body.appendChild(el);
+            }
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => { if (el) el.style.display = 'none'; }, 6000);
+        }
+
+        // Start camera when partial loaded
+        document.addEventListener('DOMContentLoaded', function(){
+            startCamera();
+        });
+
+        // Stop camera when leaving the page
+        window.addEventListener('beforeunload', stopCamera);
+    })();
+</script>
+{% else %}
+    <!-- Full page will be rendered by main template -->
+{% endif %}

@@ -1,0 +1,92 @@
+
+{% extends "company/index.html" %}
+{% block body %}<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>View Qualifications</title>
+      <style>
+        /* Custom styling for the table */
+        .table-container {
+            padding: 30px;
+            margin: 30px auto;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 50%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        /* Updated header styling with better contrast */
+        th {
+            background-color: #007bff;  /* Blue background */
+            color: #ffffff;             /* White text color */
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light gray for alternating rows */
+        }
+
+        tr:hover {
+            background-color: #e2e2e2; /* Light gray hover effect */
+        }
+
+        img {
+            border-radius: 5px;
+        }
+          .btn-black {
+    background-color: black;   /* Set the background color to black */
+    color: white;              /* Set the text color to white for contrast */
+    border: none;              /* Remove the border */
+    padding: 10px 20px;        /* Add some padding */
+    font-size: 16px;           /* Adjust font size */
+    cursor: pointer;          /* Change the cursor to a pointer */
+    border-radius: 5px;        /* Optional: add rounded corners */
+}
+
+.btn-black:hover {
+    background-color: #333;    /* Darker shade when hovering */
+}
+    </style>
+</head>
+
+<body>
+ <div class="container table-container">
+        <h2 class="text-center mb-4">View Qualifications</h2>
+        <table class="table table-bordered">
+            <thead>
+
+  <tr>
+    <th style="background-color: #2ae149" scope="col">Sl. No</th>
+    <th style="background-color: #2ae149" scope="col">Qualification</th>
+    <th  style="background-color: #2ae149"scope="col">&nbsp;</th>
+  </tr>
+    </thead>
+            <tbody>
+    {% for i in data %}
+  <tr>
+    <td>&nbsp;{{ forloop.counter }}</td>
+    <td>{{ i.QUALIFICATION.qualification }}</td>
+    <td>
+        <br><a href="/delete_qualification/{{ i.id }}" class="btn btn-danger">Delete</a></td>
+  </tr>
+    {% endfor %}
+ </tbody>
+        </table>
+    </div>
+
+    <!-- Bootstrap JS (optional, for responsiveness and some additional features) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}
